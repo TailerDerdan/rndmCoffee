@@ -3,12 +3,15 @@ package main
 import (
 	"log"
 
-	todo "github.com/MerBasNik/rndmCoffee"
+	chat "github.com/MerBasNik/rndmCoffee"
+	"github.com/MerBasNik/rndmCoffee/pkg/handler"
 )
 
-func main()  {
-	srv := new(todo.Server)
-	if err := srv.Run("8000"); err != nil {
+func main() {
+	handler := new(handler.Handler)
+
+	srv := new(chat.Server)
+	if err := srv.Run("8000", handler.InitRouts()); err != nil {
 		log.Fatalf("error while running http server: %s", err.Error())
 	}
 }
