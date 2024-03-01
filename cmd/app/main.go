@@ -2,12 +2,13 @@ package main
 
 import (
 	"log"
-	"github.com/MerBasNik/endmCoffee"
+
+	todo "github.com/MerBasNik/rndmCoffee"
 )
 
-func main() {
+func main()  {
 	srv := new(todo.Server)
 	if err := srv.Run("8000"); err != nil {
-		log.Fatalf("error occured while runnung http server: %s", err.Error())
+		log.Fatalf("error while running http server: %s", err.Error())
 	}
 }
