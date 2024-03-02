@@ -1,6 +1,5 @@
 package repository
 
-import "github.com/MerBasNik/rndmCoffee/pkg/repository"
 
 type Autorization interface {
 }
