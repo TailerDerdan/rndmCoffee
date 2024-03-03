@@ -1,9 +1,12 @@
 package repository
 
-import "github.com/jmoiron/sqlx"
-
+import (
+	chat "github.com/MerBasNik/rndmCoffee"
+	"github.com/jmoiron/sqlx"
+)
 
 type Autorization interface {
+	CreateUser(user chat.User) (int, error)
 }
 
 type ChatList interface {
@@ -19,5 +22,7 @@ type Repository struct {
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{}
+	return &Repository{
+		Autorization: NewAuthPostgres(db),
+	}
 }

@@ -1,12 +1,17 @@
-package postgres
+package repository
 
 import (
-	"database/sql"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	//"golang.org/x/tools/go/cfg"
-	
+)
+
+const (
+	userTable       = "users"
+	chatListsTable  = "chat_lists"
+	usersListsTable = "users_lists"
+	chatItemsTable  = "chat_items"
+	listsItemsTable = "lists_items"
 )
 
 type Config struct {
@@ -18,8 +23,8 @@ type Config struct {
 	SSLMode  string
 }
 
-func NewPostgresDB(cfg Config) (*sql.DB, error) {
-	db, err := sqlx.Open("postgres", fmt.Sprintf("host: %s, port: %s, username: %s, passowrd: %s, dbname: %s, sslmode: %s",
+func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
+	db, err := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s username=%s passowrd=%s dbname=%s sslmode=%s",
 		cfg.Host, cfg.Port, cfg.Username, cfg.Password, cfg.DBName, cfg.SSLMode))
 
 	if err != nil {

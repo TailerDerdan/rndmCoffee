@@ -1,8 +1,12 @@
 package service
 
-import "github.com/MerBasNik/rndmCoffee/pkg/repository"
+import (
+	chat "github.com/MerBasNik/rndmCoffee"
+	"github.com/MerBasNik/rndmCoffee/pkg/repository"
+)
 
 type Autorization interface {
+	CreateUser(user chat.User) (int, error) 
 }
 
 type ChatList interface {
@@ -18,5 +22,7 @@ type Service struct {
 }
 
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		Autorization: NewAuthService(repos.Autorization),
+	}
 }
