@@ -6,7 +6,8 @@ import (
 )
 
 type Autorization interface {
-	CreateUser(user chat.User) (int, error) 
+	CreateUser(user chat.User) (int, error)
+	GenerateToken(username, passowrd string) (string, error)
 }
 
 type ChatList interface {
