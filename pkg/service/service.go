@@ -12,6 +12,9 @@ type Autorization interface {
 }
 
 type ChatList interface {
+	Create(userId int, list chat.ChatList) (int, error)
+	GetAll(userId int) ([]chat.ChatList, error)
+	GetById(userId, listId int) (chat.ChatList, error)
 }
 
 type ChatItem interface {
@@ -26,5 +29,6 @@ type Service struct {
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		Autorization: NewAuthService(repos.Autorization),
+		ChatList:     NewChatListService(repos.ChatList),
 	}
 }
