@@ -4,7 +4,7 @@ import (
 	"os"
 
 	chat "github.com/MerBasNik/rndmCoffee"
-	handler "github.com/MerBasNik/rndmCoffee/pkg/handlers"
+	handler "github.com/MerBasNik/rndmCoffee/pkg/handler"
 	"github.com/MerBasNik/rndmCoffee/pkg/repository"
 	"github.com/MerBasNik/rndmCoffee/pkg/service"
 	"github.com/joho/godotenv"

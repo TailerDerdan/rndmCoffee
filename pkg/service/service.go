@@ -8,6 +8,7 @@ import (
 type Autorization interface {
 	CreateUser(user chat.User) (int, error)
 	GenerateToken(username, passowrd string) (string, error)
+	ParseToken(token string) (int, error)
 }
 
 type ChatList interface {
