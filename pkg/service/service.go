@@ -20,6 +20,8 @@ type ChatList interface {
 }
 
 type ChatItem interface {
+	Create(userId, listId int, item chat.ChatItem) (int, error)
+	GetAll(userId, listId int) ([]chat.ChatItem, error)
 }
 
 type Service struct {

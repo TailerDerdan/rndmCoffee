@@ -19,6 +19,8 @@ type ChatList interface {
 }
 
 type ChatItem interface {
+	Create(listId int, item chat.ChatItem) (int, error)
+	GetAll(userId, listId int) ([]chat.ChatItem, error)
 }
 
 type Repository struct {
@@ -31,5 +33,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Autorization: NewAuthPostgres(db),
 		ChatList:     NewChatListPostgres(db),
+		ChatItem: 	  NewChatItemPostgres(db),
 	}
 }
