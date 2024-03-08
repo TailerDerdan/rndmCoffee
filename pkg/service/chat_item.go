@@ -26,3 +26,15 @@ func (s *ChatItemService) Create(userId, listId int, item chat.ChatItem) (int, e
 func (s *ChatItemService) GetAll(userId, listId int) ([]chat.ChatItem, error) {
 	return s.repo.GetAll(userId, listId)
 }
+
+func (s *ChatItemService) GetById(userId, itemId int) (chat.ChatItem, error) {
+	return s.repo.GetById(userId, itemId)
+}
+
+func (s *ChatItemService) Delete(userId, itemId int) error {
+	return s.repo.Delete(userId, itemId)
+}
+
+func (s *ChatItemService) Update(userId, itemId int, input chat.UpdateItemInput) error {
+	return s.repo.Update(userId, itemId, input)
+}

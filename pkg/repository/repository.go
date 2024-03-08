@@ -21,6 +21,9 @@ type ChatList interface {
 type ChatItem interface {
 	Create(listId int, item chat.ChatItem) (int, error)
 	GetAll(userId, listId int) ([]chat.ChatItem, error)
+	GetById(userId, itemId int) (chat.ChatItem, error)
+	Delete(userId, itemId int) error
+	Update(userId, itemId int, input chat.UpdateItemInput) error
 }
 
 type Repository struct {
