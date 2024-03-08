@@ -14,6 +14,8 @@ type ChatList interface {
 	Create(userId int, list chat.ChatList) (int, error)
 	GetAll(userId int) ([]chat.ChatList, error)
 	GetById(userId, listId int) (chat.ChatList, error)
+	Delete(userId, listId int) error
+	Update(userId, listId int, input chat.UpdateListInput) error
 }
 
 type ChatItem interface {
