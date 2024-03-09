@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -26,6 +27,9 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		logrus.Fatalf("error loading env value: %s", err.Error())
 	}
+
+	fmt.Printf("%s, %s, %s, %s, %s, %s", viper.GetString("db.host"), viper.GetString("db.port"), os.Getenv("DB_PASSWORD"),
+	viper.GetString("db.username"), viper.GetString("db.dbname"), viper.GetString("db.sslmode"),)
 
 	db, err := repository.NewPostgresDB(repository.Config{
 		Host:     viper.GetString("db.host"),
