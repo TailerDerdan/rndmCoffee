@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"os"
+	"os/signal"
+	"syscall"
 
 	chat "github.com/MerBasNik/rndmCoffee"
 	handler "github.com/MerBasNik/rndmCoffee/pkg/handler"
@@ -42,8 +45,25 @@ func main() {
 	handler := handler.NewHandler(services)
 
 	srv := new(chat.Server)
-	if err := srv.Run(viper.GetString("port"), handler.InitRouts()); err != nil {
-		logrus.Fatalf("error while running http server: %s", err.Error())
+	go func() {
+		if err := srv.Run(viper.GetString("port"), handler.InitRouts()); err != nil {
+			logrus.Fatalf("error while running http server: %s", err.Error())
+		}
+	}()
+
+	logrus.Print("ChatApp Started")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	logrus.Print("ChatApp Shutting down")
+
+	if err := srv.Shutdown(context.Background()); err != nil {
+		logrus.Errorf("error occured on server shutting down: %s", err.Error())
+	}
+	if err := db.Close(); err != nil {
+		logrus.Errorf("error occured on db connection close: %s", err.Error())
 	}
 }
 
