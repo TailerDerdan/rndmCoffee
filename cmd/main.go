@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	//"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,6 +17,17 @@ import (
 	"github.com/spf13/viper"
 )
 
+// @title rndmCoffee API
+// @version 1.0
+// @description Api server for Random Coffee
+
+// @host localhost:8000
+// @BasePath /
+
+// @securitydefinitions.apikey ApiKeyAuth
+// @in header
+// @name Autorizetion
+
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
@@ -28,8 +39,8 @@ func main() {
 		logrus.Fatalf("error loading env value: %s", err.Error())
 	}
 
-	fmt.Printf("%s, %s, %s, %s, %s, %s", viper.GetString("db.host"), viper.GetString("db.port"), os.Getenv("DB_PASSWORD"),
-	viper.GetString("db.username"), viper.GetString("db.dbname"), viper.GetString("db.sslmode"),)
+	//fmt.Printf("%s, %s, %s, %s, %s, %s", viper.GetString("db.host"), viper.GetString("db.port"), os.Getenv("DB_PASSWORD"),
+	//viper.GetString("db.username"), viper.GetString("db.dbname"), viper.GetString("db.sslmode"),)
 
 	db, err := repository.NewPostgresDB(repository.Config{
 		Host:     viper.GetString("db.host"),
