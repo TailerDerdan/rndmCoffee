@@ -31,9 +31,9 @@ func main() {
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
 		Password: os.Getenv("DB_PASSWORD"),
-		Username: viper.GetString("db.Username"),
-		DBName:   viper.GetString("db.DBName"),
-		SSLMode:  viper.GetString("db.SSLMode"),
+		Username: viper.GetString("db.username"),
+		DBName:   viper.GetString("db.dbname"),
+		SSLMode:  viper.GetString("db.sslmode"),
 	})
 
 	if err != nil {
