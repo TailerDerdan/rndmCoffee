@@ -24,6 +24,7 @@ import (
 func (h *Handler) createList(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -60,9 +61,10 @@ type getAllListsResponse struct {
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/lists [get]
-func (h *Handler) getAllList(c *gin.Context) {
+func (h *Handler) getAllLists(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -84,7 +86,8 @@ func (h *Handler) getAllList(c *gin.Context) {
 // @ID get-list-by-id
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} chat.ListItem
+// @Param input body chat.ChatList.Id true "list info"
+// @Success 200 {object} chat.ListsItem
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
@@ -92,6 +95,7 @@ func (h *Handler) getAllList(c *gin.Context) {
 func (h *Handler) getListById(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -113,6 +117,7 @@ func (h *Handler) getListById(c *gin.Context) {
 func (h *Handler) updateList(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -139,6 +144,7 @@ func (h *Handler) updateList(c *gin.Context) {
 func (h *Handler) deleteList(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 

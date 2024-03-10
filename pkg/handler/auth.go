@@ -23,11 +23,11 @@ func (h *Handler) signUp(c *gin.Context) {
 	var input chat.User
 
 	if err := c.BindJSON(&input); err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		NewErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
-	id, err := h.services.Autorization.CreateUser(input)
+	id, err := h.services.Authorization.CreateUser(input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -43,7 +43,6 @@ type signInInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-
 // @Summary SignIn
 // @Tags auth
 // @Description login
@@ -56,7 +55,7 @@ type signInInput struct {
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /auth/sign-in [post]
-func (h *Handler) signIn(c *gin.Context) { 
+func (h *Handler) signIn(c *gin.Context) {
 	var input signInInput
 
 	if err := c.BindJSON(&input); err != nil {
@@ -64,7 +63,7 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	token, err := h.services.Autorization.GenerateToken(input.Username, input.Password)
+	token, err := h.services.Authorization.GenerateToken(input.Username, input.Password)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

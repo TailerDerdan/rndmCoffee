@@ -149,11 +149,22 @@ const docTemplate = `{
                 ],
                 "summary": "Get List By Id",
                 "operationId": "get-list-by-id",
+                "parameters": [
+                    {
+                        "description": "list info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.ChatList"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/chat.ListItem"
+                            "$ref": "#/definitions/chat.ListsItem"
                         }
                     },
                     "400": {
@@ -320,7 +331,7 @@ const docTemplate = `{
                 }
             }
         },
-        "chat.ListItem": {
+        "chat.ListsItem": {
             "type": "object",
             "properties": {
                 "id": {
@@ -391,7 +402,7 @@ const docTemplate = `{
     "securityDefinitions": {
         "ApiKeyAuth": {
             "type": "apiKey",
-            "name": "Autorizetion",
+            "name": "Authorization",
             "in": "header"
         }
     }
@@ -403,8 +414,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8000",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "rndmCoffee API",
-	Description:      "Api server for Random Coffee",
+	Title:            "Chat App API",
+	Description:      "API Server for ChatList Application",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

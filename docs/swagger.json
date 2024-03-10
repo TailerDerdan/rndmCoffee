@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Api server for Random Coffee",
-        "title": "rndmCoffee API",
+        "description": "API Server for ChatList Application",
+        "title": "Chat App API",
         "contact": {},
         "version": "1.0"
     },
@@ -143,11 +143,22 @@
                 ],
                 "summary": "Get List By Id",
                 "operationId": "get-list-by-id",
+                "parameters": [
+                    {
+                        "description": "list info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.ChatList"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/chat.ListItem"
+                            "$ref": "#/definitions/chat.ListsItem"
                         }
                     },
                     "400": {
@@ -314,7 +325,7 @@
                 }
             }
         },
-        "chat.ListItem": {
+        "chat.ListsItem": {
             "type": "object",
             "properties": {
                 "id": {
@@ -385,7 +396,7 @@
     "securityDefinitions": {
         "ApiKeyAuth": {
             "type": "apiKey",
-            "name": "Autorizetion",
+            "name": "Authorization",
             "in": "header"
         }
     }
