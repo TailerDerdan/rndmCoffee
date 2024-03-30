@@ -3,6 +3,7 @@ import stylesRegister from "./register.module.css";
 import stylesReEntry from "./re-entry.module.css";
 import { InputField } from "./register";
 import { Navigate, useNavigate } from "react-router-dom";
+import { ButtonTextLink } from "../../components/button/button";
 
 export const ReEntryScreen = () => {
 	const [InputNameEmail, setInputEmail] = useState("");
@@ -146,6 +147,28 @@ export const ReEntryScreen = () => {
 							>
 								Вход
 							</button>
+						</div>
+						<div className={stylesReEntry.wrapper__create__account}>
+							<div>
+								<h2
+									className={
+										stylesRegister.inputField__header
+									}
+								>
+									Еще не с нами?
+								</h2>
+							</div>
+							<div
+								className={
+									stylesRegister.wrapper__buttonTextLink
+								}
+							>
+								<ButtonTextLink
+									id={"reg"}
+									title={"Регистрация"}
+									link={"/reg"}
+								/>
+							</div>
 						</div>
 					</form>
 				</div>

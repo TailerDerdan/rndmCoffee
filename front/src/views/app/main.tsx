@@ -8,8 +8,8 @@ import { Profile } from "../profilePage/profile";
 export const Main = () => {
 	return (
 		<Routes>
-			<Route path="/" element={<RegistrationScreen />} />
-			<Route path="/reEnt" element={<ReEntryScreen />} />
+			<Route path="/" element={<ReEntryScreen />} />
+			<Route path="/reg" element={<RegistrationScreen />} />
 			<Route path="/main" element={<MainPage />}>
 				<Route index element={<></>} />
 				<Route path="/main/chats" element={<></>} />

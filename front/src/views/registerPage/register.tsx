@@ -179,13 +179,6 @@ export const RegistrationScreen = () => {
 							/>
 						</div>
 						<div className={styles.wrapper__input__submit}>
-							<div className={styles.wrapper__buttonTextLink}>
-								<ButtonTextLink
-									id={"reEntry"}
-									title={"Уже имеете аккаунт"}
-									link={"/reEnt"}
-								/>
-							</div>
 							<button
 								type={"submit"}
 								className={styles.input__submit}
