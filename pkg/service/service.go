@@ -5,10 +5,23 @@ import (
 	"github.com/MerBasNik/rndmCoffee/pkg/repository"
 )
 
-type Autorization interface {
+type Authorization interface {
 	CreateUser(user chat.User) (int, error)
-	GenerateToken(username, passowrd string) (string, error)
+	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)
+	ForgotPassword(input string) error
+	ResetPassword(email, password string) error
+}
+
+type Profile interface {
+	CreateProfile(userId int, profile chat.Profile) (int, error)
+	GetProfile(userId, profileId int) (chat.Profile, error)
+	EditProfile(userId, profileId int, input chat.UpdateProfile) error
+
+	CreateHobby(userId int, hobbies map[string][]chat.UserHobbyInput) (int, error)
+	GetAllHobby(userId int) ([]chat.UserHobby, error)
+	DeleteHobby(userId, hobbyId int) error
+	//UploadAvatar(profileId int, directory string) error
 }
 
 type ChatList interface {
@@ -28,15 +41,17 @@ type ChatItem interface {
 }
 
 type Service struct {
-	Autorization
-	ChatItem
+	Authorization
+	Profile
 	ChatList
+	ChatItem
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Autorization: NewAuthService(repos.Autorization),
-		ChatList:     NewChatListService(repos.ChatList),
-		ChatItem:     NewChatItemService(repos.ChatItem, repos.ChatList),
+		Authorization: NewAuthService(repos.Authorization),
+		Profile:       NewProfileService(repos.Profile),
+		ChatList:      NewChatListService(repos.ChatList),
+		ChatItem:      NewChatItemService(repos.ChatItem, repos.ChatList),
 	}
 }

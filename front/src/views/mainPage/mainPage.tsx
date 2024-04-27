@@ -1,43 +1,30 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 import styles from "./mainPage.module.css";
-import { ButtonIconLink } from "../../components/button/button";
-import {
-	ChatsMainPageIcon,
-	CoffeeMainPageIcon,
-	ProfileImageIcon,
-	ProfileMainPageIcon,
-} from "../../components/icons/icons";
-import { Outlet, Route, Routes } from "react-router-dom";
-import { Profile } from "../profilePage/profile";
+import { ButtonTextLink } from "../../components/button/button";
 
 export const MainPage = () => {
 	return (
-		<div>
-			<div className={styles.leftPanel}>
-				<div className={styles.leftPanel__profileIcon}>
-					<ProfileImageIcon />
+		<>
+			<header className={styles.mainPage__header}>
+				<div className={styles.header__buttonHome}>
+					<ButtonTextLink
+						id={"home"}
+						link={"/main/home"}
+						title={"Главная"}
+					/>
 				</div>
-				<div className={styles.leftPanel__pagesIcon}>
-					<ButtonIconLink
-						id="mainPage"
-						link={"/main"}
-						icon={<CoffeeMainPageIcon />}
-					/>
-					<ButtonIconLink
-						id="chats"
-						link={"/main/chats"}
-						icon={<ChatsMainPageIcon />}
-					/>
-					<ButtonIconLink
-						id="profile"
+				<div className={styles.header__buttonProfile}>
+					<ButtonTextLink
+						id={"profile"}
 						link={"/main/profile"}
-						icon={<ProfileMainPageIcon />}
+						title={"Профиль"}
 					/>
 				</div>
-			</div>
-			<div className={styles.rightPanel}>
+			</header>
+			<div className={styles.mainContent}>
 				<Outlet />
 			</div>
-		</div>
+		</>
 	);
 };

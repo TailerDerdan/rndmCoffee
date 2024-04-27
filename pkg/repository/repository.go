@@ -5,9 +5,21 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Autorization interface {
+type Authorization interface {
 	CreateUser(user chat.User) (int, error)
-	GetUser(username, password string) (chat.User, error)
+	GetUser(email, password string) (chat.User, error)
+	ResetPassword(email, password string) error
+}
+
+type Profile interface {
+	CreateProfile(userId int, profile chat.Profile) (int, error)
+	GetProfile(userId, profileId int) (chat.Profile, error)
+	EditProfile(userId, profileId int, input chat.UpdateProfile) error
+
+	CreateHobby(userId int, hobbies map[string][]chat.UserHobbyInput) (int, error)
+	GetAllHobby(userId int) ([]chat.UserHobby, error)
+	DeleteHobby(userId, hobbyId int) error
+	//UploadAvatar(profileId int, directory string) error
 }
 
 type ChatList interface {
@@ -27,15 +39,17 @@ type ChatItem interface {
 }
 
 type Repository struct {
-	Autorization
-	ChatItem
+	Authorization
+	Profile
 	ChatList
+	ChatItem
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		Autorization: NewAuthPostgres(db),
-		ChatList:     NewChatListPostgres(db),
-		ChatItem: 	  NewChatItemPostgres(db),
+		Authorization: NewAuthPostgres(db),
+		Profile:       NewProfilePostgres(db),
+		ChatList:      NewChatListPostgres(db),
+		ChatItem:      NewChatItemPostgres(db),
 	}
 }

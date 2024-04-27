@@ -6,11 +6,18 @@
 }
 
 :root {
-	--main-font-family: Inter, sans-serif;
-	--main-font-weight: lighter;
-	--inputField-fonstSize: 1.063rem;
-	--register-fontSize: 1.875rem;
-	--label-header-fontSize: 0.938rem;
-	--profile-fontSize: 1.125rem;
+	--main-font-family: inter, sans-serif;
+	--main-font-weight: 450px;
+	--register-fontSize: 2.25rem;
+	--inputField-fonstSize-Auth: 1.125rem;
+	--label-fontSize-Auth: 1.125rem;
+	--inputField-fonstSize-Prof: 0.938rem;
+	--label-fontSize-Prof: 0.938rem;
 	--error-fontSize: 1.4rem;
+	--additionalText-fontSize: 0.75rem;
+	--header-welcome-fontSize: 2.344rem;
+	--text-welcome-fontSize: 1.125rem;
+	--text-userPath-fontSize: 0.813rem;
+	--header-contacts-fontSize: 2.25rem;
+	--header-choice-activity: 1.875rem;
 }
