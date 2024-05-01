@@ -6,6 +6,7 @@ import {
 	Button,
 	ButtonTextLink,
 	ButtonType,
+	LocationOnPages,
 } from "../../components/button/button";
 import {
 	LocationInputField,
@@ -87,7 +88,7 @@ export const ReEntryScreen = () => {
 							setToken(dataFromResponse.token);
 
 							setTimeout(() => {
-								navigate("/auth_profile/contacts", {
+								navigate("/main/home", {
 									replace: true,
 								});
 							}, 1);
@@ -175,6 +176,7 @@ export const ReEntryScreen = () => {
 								}
 							>
 								<ButtonTextLink
+									location={LocationOnPages.Authorization}
 									id={"reg"}
 									title={"Регистрация"}
 									link={"/reg"}

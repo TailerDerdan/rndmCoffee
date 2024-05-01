@@ -13,7 +13,7 @@ import (
 // @ID create-account
 // @Accept  json
 // @Produce  json
-// @Param input body chat.User true "account info"
+// @Param input body chat.UserInput true "account info"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
@@ -40,7 +40,7 @@ func (h *Handler) signUp(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"id":    id,
+		"id": id,
 		"token": token,
 	})
 }
@@ -81,46 +81,34 @@ func (h *Handler) signIn(c *gin.Context) {
 	})
 }
 
-// func (h *Handler) resetPassword(c *gin.Context) {
-// 	var input chat.ResetPasswordInput
 
-// 	if err := c.BindJSON(&input); err != nil {
-// 		NewErrorResponse(c, http.StatusBadRequest, "invalid input body")
-// 		return
-// 	}
-
-// 	err := h.services.Authorization.ResetPassword(inputEmail.Email, input.Password)
-// 	if err != nil {
-// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, statusResponse{
-// 		Status: "ok",
-// 	})
-// }
-
-// @Summary Forgot Password
+// @Summary Reset Password
 // @Tags auth
-// @Description forgot password
-// @ID forgot-password
+// @Description reset password
+// @ID reset-password
 // @Accept  json
 // @Produce  json
-// @Param input body chat.ForgotPasswordInput true "credentials"
+// @Param   token path string true "Token"
+// @Param   input body chat.ResetPasswordInput true "passwords"
 // @Success 200 {string} statusResponse
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /auth/forgot-password [post]
-func (h *Handler) forgotPassword(c *gin.Context) {
-	var inputEmail chat.ForgotPasswordInput
+// @Router /auth/reset-password/{token} [put]
+func (h *Handler) resetPassword(c *gin.Context) {
+	token := c.Param("token")
+	if token == "" {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
 
-	if err := c.BindJSON(&inputEmail); err != nil {
+	var input chat.ResetPasswordInput
+	if err := c.BindJSON(&input); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
-	err := h.services.Authorization.ForgotPassword(inputEmail.Email)
+	err := h.services.Authorization.ResetPassword(token, input.Password)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -128,6 +116,37 @@ func (h *Handler) forgotPassword(c *gin.Context) {
 
 	c.JSON(http.StatusOK, statusResponse{
 		Status: "ok",
+	})
+}
+
+// @Summary Forgot Password
+// @Tags auth
+// @Description forgot password
+// @ID forgot-password
+// @Accept  json
+// @Produce  json
+// @Param input body chat.ForgotPasswordInput true "email"
+// @Success 200 {string} statusResponse
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /auth/forgot-password [post]
+func (h *Handler) forgotPassword(c *gin.Context) {
+	var input chat.ForgotPasswordInput
+
+	if err := c.BindJSON(&input); err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid input body")
+		return
+	}
+
+	token, err := h.services.Authorization.ForgotPassword(input.Email)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"token": token,
 	})
 }
 

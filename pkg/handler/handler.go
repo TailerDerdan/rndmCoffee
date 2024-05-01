@@ -19,7 +19,7 @@ func NewHandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
-func (h *Handler) InitRoutes() *gin.Engine {
+func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 	router := gin.New()
 
 	router.Use(CORSMiddleware())
@@ -31,7 +31,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
 		auth.POST("/forgot-password", h.forgotPassword)
-		//	auth.POST("/reset-password", h.resetPassword)
+		auth.PUT("/reset-password/:token", h.resetPassword)
 	}
 
 	api := router.Group("/api", h.userIdentity)
@@ -55,6 +55,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			chats.POST("/create_chat", h.createList)
 			chats.GET("/get_all_chats", h.getAllLists)
+			chats.POST("/find_chats_users", h.findUsersByTime)
+			chats.POST("/find_chats_users_by_hobby", h.findUsersByHobby)
 			chats.GET("/get_chat/:chat_id", h.getListById)
 			chats.PUT("/update_chat/:chat_id", h.updateList)
 			chats.DELETE("/delete_chat/:chat_id", h.deleteList)
@@ -62,15 +64,23 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			items := chats.Group(":chat_id/items")
 			{
 				items.POST("/create_item", h.createItem)
-				items.GET("/get_all_items", h.getAllItems)
+				// items.GET("/get_all_items", h.getAllItems)
 			}
 		}
 
-		items := api.Group("/items")
+		// items := api.Group("/items")
+		// {
+		// 	items.GET("/get_item/:item_id", h.getItemById)
+		// 	items.PUT("/update_item/:item_id", h.updateItem)
+		// 	items.DELETE("/delete_item/:item_id", h.deleteItem)
+		// }
+
+		webSocketApi := api.Group("/ws")
 		{
-			items.GET("/get_item/:item_id", h.getItemById)
-			items.PUT("/update_item/:item_id", h.updateItem)
-			items.DELETE("/delete_item/:item_id", h.deleteItem)
+			webSocketApi.POST("/createRoom", wsHandler.CreateRoom)
+			webSocketApi.GET("/joinRoom/:roomId", func(c *gin.Context) {
+				wsHandler.JoinRoom(c, h.services.CreateItem)
+			})
 		}
 	}
 

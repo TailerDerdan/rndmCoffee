@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 // @Summary Create Chat Item
 // @Security ApiKeyAuth
 // @Tags chats items
@@ -42,7 +41,7 @@ func (h *Handler) createItem(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.ChatItem.Create(userId, chat_id, input)
+	id, err := h.services.ChatItem.CreateItem(userId, chat_id, input.Username, input.Description, input.Chatlist_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -53,9 +52,9 @@ func (h *Handler) createItem(c *gin.Context) {
 	})
 }
 
-type getAllListsItemsResponse struct {
-	Data []chat.ChatItem `json:"data"`
-}
+// type getAllListsItemsResponse struct {
+// 	Data []chat.ChatItem `json:"data"`
+// }
 
 // @Summary Get All Chats Items
 // @Security ApiKeyAuth
@@ -70,30 +69,29 @@ type getAllListsItemsResponse struct {
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/chats/{chat_id}/items/get_all_items [get]
-func (h *Handler) getAllItems(c *gin.Context) {
-	userId, err := getUserId(c)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+// func (h *Handler) getAllItems(c *gin.Context) {
+// 	userId, err := getUserId(c)
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	chat_id, err := strconv.Atoi(c.Param("chat_id"))
-	if err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
-		return
-	}
+// 	chat_id, err := strconv.Atoi(c.Param("chat_id"))
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+// 		return
+// 	}
 
-	items, err := h.services.ChatItem.GetAll(userId, chat_id)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+// 	items, err := h.services.ChatItem.GetAll(userId, chat_id)
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	c.JSON(http.StatusOK, getAllListsItemsResponse{
-		Data: items,
-	})
-}
-
+// 	c.JSON(http.StatusOK, getAllListsItemsResponse{
+// 		Data: items,
+// 	})
+// }
 
 // @Summary Get Chat Item By Id
 // @Security ApiKeyAuth
@@ -108,28 +106,27 @@ func (h *Handler) getAllItems(c *gin.Context) {
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/items/get_item/{item_id} [get]
-func (h *Handler) getItemById(c *gin.Context) {
-	userId, err := getUserId(c)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+// func (h *Handler) getItemById(c *gin.Context) {
+// 	userId, err := getUserId(c)
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	item_id, err := strconv.Atoi(c.Param("item_id"))
-	if err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
-		return
-	}
+// 	item_id, err := strconv.Atoi(c.Param("item_id"))
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+// 		return
+// 	}
 
-	item, err := h.services.ChatItem.GetById(userId, item_id)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+// 	item, err := h.services.ChatItem.GetById(userId, item_id)
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	c.JSON(http.StatusOK, item)
-}
-
+// 	c.JSON(http.StatusOK, item)
+// }
 
 // @Summary Update Chat Item
 // @Security ApiKeyAuth
@@ -145,33 +142,32 @@ func (h *Handler) getItemById(c *gin.Context) {
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/items/update_item/{item_id} [put]
-func (h *Handler) updateItem(c *gin.Context) {
-	userId, err := getUserId(c)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+// func (h *Handler) updateItem(c *gin.Context) {
+// 	userId, err := getUserId(c)
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	item_id, err := strconv.Atoi(c.Param("item_id"))
-	if err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
-		return
-	}
+// 	item_id, err := strconv.Atoi(c.Param("item_id"))
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
+// 		return
+// 	}
 
-	var input chat.UpdateItemInput
-	if err := c.BindJSON(&input); err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, err.Error())
-		return
-	}
+// 	var input chat.UpdateItemInput
+// 	if err := c.BindJSON(&input); err != nil {
+// 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+// 		return
+// 	}
 
-	if err := h.services.ChatItem.Update(userId, item_id, input); err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+// 	if err := h.services.ChatItem.Update(userId, item_id, input); err != nil {
+// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	c.JSON(http.StatusOK, statusResponse{"ok"})
-}
-
+// 	c.JSON(http.StatusOK, statusResponse{"ok"})
+// }
 
 // @Summary Delete Chat Item
 // @Security ApiKeyAuth
@@ -186,24 +182,24 @@ func (h *Handler) updateItem(c *gin.Context) {
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/items/delete_item/{item_id} [delete]
-func (h *Handler) deleteItem(c *gin.Context) {
-	userId, err := getUserId(c)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+// func (h *Handler) deleteItem(c *gin.Context) {
+// 	userId, err := getUserId(c)
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	item_id, err := strconv.Atoi(c.Param("item_id"))
-	if err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
-		return
-	}
+// 	item_id, err := strconv.Atoi(c.Param("item_id"))
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+// 		return
+// 	}
 
-	err = h.services.ChatItem.Delete(userId, item_id)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+// 	err = h.services.ChatItem.Delete(userId, item_id)
+// 	if err != nil {
+// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	c.JSON(http.StatusOK, statusResponse{"ok"})
-}
+// 	c.JSON(http.StatusOK, statusResponse{"ok"})
+// }

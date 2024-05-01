@@ -7,6 +7,7 @@ import { UserContacts } from "../profilePage/contacts/contactsPage";
 import { WelcomePage } from "../profilePage/welcome/welcomePage";
 import { MainPage } from "../mainPage/mainPage";
 import { ActivityPage } from "../profilePage/activity/activityPage";
+import { HomePage } from "../mainPage/homePage/homePage";
 
 export const Main = () => {
 	return (
@@ -25,7 +26,7 @@ export const Main = () => {
 				<Route path="/auth_profile/welcome" element={<WelcomePage />} />
 			</Route>
 			<Route path="/main" element={<MainPage />}>
-				<Route path="/main/home" element={<></>} />
+				<Route path="/main/home" element={<HomePage />} />
 				<Route path="/main/profile" element={<></>} />
 			</Route>
 		</Routes>

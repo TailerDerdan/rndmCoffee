@@ -37,16 +37,20 @@ func (s *ProfileService) GetProfile(userId, profileId int) (chat.Profile, error)
 	return s.repo.GetProfile(userId, profileId)
 }
 
-func (s *ProfileService) CreateHobby(userId int, hobbies map[string][]chat.UserHobbyInput) (int, error) {
-	return s.repo.CreateHobby(userId, hobbies)
+func (s *ProfileService) InitAllHobbies() error {
+	return s.repo.InitAllHobbies()
 }
 
-func (s *ProfileService) GetAllHobby(userId int) ([]chat.UserHobby, error) {
-	return s.repo.GetAllHobby(userId)
+func (s *ProfileService) CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error) {
+	return s.repo.CreateHobby(profId, hobbies)
 }
 
-func (s *ProfileService) DeleteHobby(userId, hobbyId int) error {
-	return s.repo.DeleteHobby(userId, hobbyId)
+func (s *ProfileService) GetAllHobby(profId int) ([]chat.UserHobby, error) {
+	return s.repo.GetAllHobby(profId)
+}
+
+func (s *ProfileService) DeleteHobby(profId, hobbyId int) error {
+	return s.repo.DeleteHobby(profId, hobbyId)
 }
 
 // func (s *ProfileService) GetAvatar(userId int, c *gin.Context) (string, error) {

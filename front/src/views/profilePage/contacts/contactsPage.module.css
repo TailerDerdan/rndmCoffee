@@ -1,12 +1,30 @@
 .wrapper__contacts {
 	width: 100%;
 	display: flex;
+	flex-direction: row;
+	box-sizing: border-box;
+}
+
+.wrapper__contacts__maincontent {
+	width: 100%;
+	display: flex;
 	flex-direction: column;
+	box-sizing: border-box;
+}
+
+.wrapper__userPath {
+	width: 35%;
+	display: flex;
+	box-sizing: border-box;
+	padding: 0 2%;
+	border-right: 0.2px #bfbfbf solid;
+	border-top-left-radius: 13px;
+	border-bottom-left-radius: 13px;
 }
 
 .contacts__mainHeader {
 	width: 100%;
-	padding: 5% 5% 2% 5%;
+	padding: 5% 5% 2%;
 	box-sizing: border-box;
 }
 
@@ -59,14 +77,13 @@
 }
 
 .profile__footer {
-	border-top: 1px #a1a1a1 solid;
+	border-top: 0.2px #bfbfbf solid;
 	display: flex;
 	justify-content: flex-end;
 	padding: 3% 5%;
 	align-items: center;
 	border-bottom-left-radius: 28px;
 	border-bottom-right-radius: 28px;
-	background-color: rgb(245 248 250 / 100%);
 }
 
 .wrapper__buttonNext {

@@ -9,8 +9,8 @@ type Authorization interface {
 	CreateUser(user chat.User) (int, error)
 	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)
-	ForgotPassword(input string) error
-	ResetPassword(email, password string) error
+	ForgotPassword(input string) (string, error)
+	ResetPassword(resetToken, password string) error
 }
 
 type Profile interface {
@@ -18,26 +18,29 @@ type Profile interface {
 	GetProfile(userId, profileId int) (chat.Profile, error)
 	EditProfile(userId, profileId int, input chat.UpdateProfile) error
 
-	CreateHobby(userId int, hobbies map[string][]chat.UserHobbyInput) (int, error)
-	GetAllHobby(userId int) ([]chat.UserHobby, error)
-	DeleteHobby(userId, hobbyId int) error
+	CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error)
+	GetAllHobby(profId int) ([]chat.UserHobby, error)
+	DeleteHobby(profId, hobbyId int) error
+	InitAllHobbies() error
 	//UploadAvatar(profileId int, directory string) error
 }
 
 type ChatList interface {
-	Create(userId int, list chat.ChatList) (int, error)
-	GetAll(userId int) ([]chat.ChatList, error)
-	GetById(userId, listId int) (chat.ChatList, error)
-	Delete(userId, listId int) error
-	Update(userId, listId int, input chat.UpdateListInput) error
+	CreateList(requestCreateList chat.RequestCreateList) (int, error)
+	GetAllLists(userId int) ([]chat.ChatList, error)
+	GetListById(userId, listId int) (chat.ChatList, error)
+	DeleteList(userId, listId int) error
+	UpdateList(userId, listId int, input chat.UpdateListInput) error
+	FindByTime(userId int, input chat.FindUserInput) (int, error)
+	FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error)
 }
 
 type ChatItem interface {
-	Create(userId, listId int, item chat.ChatItem) (int, error)
-	GetAll(userId, listId int) ([]chat.ChatItem, error)
-	GetById(userId, itemId int) (chat.ChatItem, error)
-	Delete(userId, itemId int) error
-	Update(userId, itemId int, input chat.UpdateItemInput) error
+	CreateItem(userId, listId int, username, description, chatlist_id string) (int, error)
+	// GetAll(userId, listId int) ([]chat.ChatItem, error)
+	// GetById(userId, itemId int) (chat.ChatItem, error)
+	// Delete(userId, itemId int) error
+	// Update(userId, itemId int, input chat.UpdateItemInput) error
 }
 
 type Service struct {

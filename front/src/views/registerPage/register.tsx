@@ -29,6 +29,10 @@ export const RegistrationScreen = () => {
 		initialValue: {},
 		key: "token",
 	});
+	const [id_user, setIdUser] = useLocalStorage({
+		initialValue: -1,
+		key: "id_user",
+	});
 	const navigate = useNavigate();
 
 	return (
@@ -97,6 +101,7 @@ export const RegistrationScreen = () => {
 							const dataFromResponse = await response.json();
 
 							setToken(dataFromResponse.token);
+							setIdUser(dataFromResponse.id);
 
 							setTimeout(() => {
 								navigate("/auth_profile/contacts", {

@@ -20,6 +20,17 @@ definitions:
     required:
     - title
     type: object
+  chat.FindUserInput:
+    properties:
+      endday:
+        type: string
+      endtime:
+        type: string
+      startday:
+        type: string
+      starttime:
+        type: string
+    type: object
   chat.ForgotPasswordInput:
     properties:
       email:
@@ -29,10 +40,14 @@ definitions:
     type: object
   chat.Profile:
     properties:
+      birthday:
+        type: string
       city:
         type: string
-      findstatus:
-        type: boolean
+      country:
+        type: string
+      id:
+        type: integer
       name:
         type: string
       photo:
@@ -42,30 +57,40 @@ definitions:
       telegram:
         type: string
     required:
-    - city
     - name
+    - photo
     - surname
     - telegram
+    type: object
+  chat.ResetPasswordInput:
+    properties:
+      password:
+        type: string
+      password-repeat:
+        type: string
+    required:
+    - password
+    - password-repeat
     type: object
   chat.UpdateItemInput:
     properties:
       description:
         type: string
-      done:
-        type: boolean
       title:
         type: string
     type: object
   chat.UpdateListInput:
     properties:
-      description:
-        type: string
       title:
         type: string
     type: object
   chat.UpdateProfile:
     properties:
+      birthday:
+        type: string
       city:
+        type: string
+      country:
         type: string
       name:
         type: string
@@ -76,7 +101,23 @@ definitions:
       telegram:
         type: string
     type: object
-  chat.User:
+  chat.UserHobby:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+    required:
+    - description
+    type: object
+  chat.UserHobbyInput:
+    properties:
+      description:
+        type: string
+    required:
+    - description
+    type: object
+  chat.UserInput:
     properties:
       email:
         type: string
@@ -85,13 +126,6 @@ definitions:
     required:
     - email
     - password
-    type: object
-  chat.UserHobby:
-    properties:
-      description:
-        type: string
-    required:
-    - description
     type: object
   handler.errorResponse:
     properties:
@@ -308,6 +342,88 @@ paths:
       summary: Delete Chat
       tags:
       - chats
+  /api/chats/find_chats_users:
+    post:
+      consumes:
+      - application/json
+      description: find users for chat
+      operationId: find-user-by-time
+      parameters:
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.FindUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Find Users for chat
+      tags:
+      - find
+  /api/chats/find_chats_users_by_hobby:
+    post:
+      consumes:
+      - application/json
+      description: find users by hobby for chat
+      operationId: find-user-by-hobby
+      parameters:
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.FindUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Find Users by hobby for chat
+      tags:
+      - find
   /api/chats/get_all_chats:
     get:
       consumes:
@@ -571,7 +687,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/chat.UserHobby'
+          $ref: '#/definitions/chat.UserHobbyInput'
       produces:
       - application/json
       responses:
@@ -851,7 +967,7 @@ paths:
       description: forgot password
       operationId: forgot-password
       parameters:
-      - description: credentials
+      - description: email
         in: body
         name: input
         required: true
@@ -881,6 +997,50 @@ paths:
           schema:
             $ref: '#/definitions/handler.errorResponse'
       summary: Forgot Password
+      tags:
+      - auth
+  /auth/reset-password/{token}:
+    put:
+      consumes:
+      - application/json
+      description: reset password
+      operationId: reset-password
+      parameters:
+      - description: Token
+        in: path
+        name: token
+        required: true
+        type: string
+      - description: passwords
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.ResetPasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Reset Password
       tags:
       - auth
   /auth/sign-in:
@@ -934,7 +1094,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/chat.User'
+          $ref: '#/definitions/chat.UserInput'
       produces:
       - application/json
       responses:

@@ -13,7 +13,7 @@
 }
 
 .wrapper__mainLabel {
-	width: 50%;
+	width: 100%;
 	display: flex;
 	align-items: flex-start;
 }
@@ -71,6 +71,7 @@
 .input:focus {
 	outline: none;
 	outline-offset: 0;
+	border: 0.66px solid #ff9e00;
 }
 
 .input__error {

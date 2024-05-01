@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./button.module.css";
-import stylesRegister from "../../views/registerPage/register.module.css";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export enum ButtonType {
 	Icon,
@@ -104,14 +103,21 @@ export const ButtonIconLink = (props: ButtonIconLinkProps) => {
 	);
 };
 
+export enum LocationOnPages {
+	Authorization,
+	HomePage,
+}
+
 type ButtonTextLinkProps = {
 	id: string;
 	link: string;
 	title: string;
+	location: LocationOnPages;
 };
 
 export const ButtonTextLink = (props: ButtonTextLinkProps) => {
-	const { id, link, title } = props;
+	const { id, link, title, location } = props;
+
 	return (
 		<div key={id} className={styles.buttonWrapper}>
 			<Link key={id} to={link} className={styles.buttonText}>

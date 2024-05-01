@@ -3,100 +3,50 @@ import styles from "./userPath.module.css";
 import { Link, useLocation } from "react-router-dom";
 import { LineSeparator } from "../icons/icons";
 
-export const UserPath = () => {
-	const [classesForFirstElementList] = useState(
-		styles.list__elementOfList + " " + styles.elementOfList__active,
-	);
-	const [classesForSecondElementList, setClassesForSecondElementList] =
-		useState(styles.list__elementOfList);
-	const [classesForThirdElementList, setClassesForThirdElementList] =
-		useState(styles.list__elementOfList);
+export enum StageType {
+	First,
+	Second,
+	Third,
+}
 
-	const location = useLocation();
-	const [keyLocation, setKeyLocation] = useState(location.pathname);
-	useEffect(() => {
-		setKeyLocation(location.pathname);
-	}, [location.pathname]);
+type UserPathProps = {
+	Stage: StageType;
+};
 
-	if (keyLocation === "http://localhost:3000/auth_profile/contacts") {
-		setClassesForSecondElementList(styles.list__elementOfList);
-		setClassesForThirdElementList(styles.list__elementOfList);
+export const UserPath = (props: UserPathProps) => {
+	const { Stage } = props;
+
+	let classesForFirstElList = styles.list__elementOfList;
+	let classesForSecondElList = styles.list__elementOfList;
+	let classesForThirdElList = styles.list__elementOfList;
+
+	if (Stage === StageType.First) {
+		classesForFirstElList += " " + styles.elementOfList__active;
 	}
 
-	if (keyLocation === "http://localhost:3000/auth_profile/activity") {
-		setClassesForSecondElementList(
-			styles.list__elementOfList + " " + styles.elementOfList__active,
-		);
-		setClassesForThirdElementList(styles.list__elementOfList);
+	if (Stage === StageType.Second) {
+		classesForSecondElList += " " + styles.elementOfList__active;
 	}
 
-	if (keyLocation === "http://localhost:3000/auth_profile/welcome") {
-		setClassesForSecondElementList(
-			styles.list__elementOfList + " " + styles.elementOfList__active,
-		);
-		setClassesForThirdElementList(
-			styles.list__elementOfList + " " + styles.elementOfList__active,
-		);
+	if (Stage === StageType.Third) {
+		classesForThirdElList += " " + styles.elementOfList__active;
 	}
 
 	return (
 		<div className={styles.wrapper__userPath}>
 			<div className={styles.userPath__list}>
 				<ol className={styles.list}>
-					<Link
-						to={"/auth_profile/contacts"}
-						className={classesForFirstElementList}
-						onClick={() => {
-							setClassesForSecondElementList(
-								styles.list__elementOfList,
-							);
-							setClassesForThirdElementList(
-								styles.list__elementOfList,
-							);
-						}}
-					>
+					<li className={classesForFirstElList}>
 						Персональная информация
-					</Link>
+					</li>
 					<div className={styles.lineSeparator}>
 						{<LineSeparator />}
 					</div>
-					<Link
-						to={"/auth_profile/activity"}
-						className={classesForSecondElementList}
-						onClick={() => {
-							setClassesForSecondElementList(
-								styles.list__elementOfList +
-									" " +
-									styles.elementOfList__active,
-							);
-							setClassesForThirdElementList(
-								styles.list__elementOfList,
-							);
-						}}
-					>
-						Ваши интересы
-					</Link>
+					<li className={classesForSecondElList}>Ваши интересы</li>
 					<div className={styles.lineSeparator}>
 						{<LineSeparator />}
 					</div>
-					<Link
-						to={"/auth_profile/welcome"}
-						className={classesForThirdElementList}
-						onClick={() => {
-							setClassesForSecondElementList(
-								styles.list__elementOfList +
-									" " +
-									styles.elementOfList__active,
-							);
-							setClassesForThirdElementList(
-								styles.list__elementOfList +
-									" " +
-									styles.elementOfList__active,
-							);
-						}}
-					>
-						Добро пожаловать!
-					</Link>
+					<li className={classesForThirdElList}>Добро пожаловать!</li>
 				</ol>
 			</div>
 		</div>

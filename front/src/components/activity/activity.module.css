@@ -2,7 +2,7 @@
 	width: auto;
 	display: flex;
 	padding: 1% 4%;
-	background-color: #e3e3e3;
+	background-color: #fff;
 	cursor: pointer;
 	margin-bottom: 2%;
 	border-radius: 8px;
@@ -11,8 +11,8 @@
 }
 
 .wrapper__activity__active {
-	border: 3px solid #005bd3;
-	background-color: white;
+	border: 3px solid #ff9d10;
+	background-color: #ff9d10;
 }
 
 .activity {
@@ -21,9 +21,10 @@
 	align-items: center;
 	font-size: var(--additionalText-fontSize);
 	font-weight: 450;
-	background-color: #e3e3e3;
+	background-color: #fff;
 }
 
 .activity__active {
-	background-color: white;
+	color: #fff;
+	background-color: #ff9d10;
 }
