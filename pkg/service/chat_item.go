@@ -1,6 +1,9 @@
 package service
 
 import (
+	"fmt"
+
+	chat "github.com/MerBasNik/rndmCoffee"
 	"github.com/MerBasNik/rndmCoffee/pkg/repository"
 )
 
@@ -13,19 +16,24 @@ func NewChatItemService(repo repository.ChatItem, listRepo repository.ChatList) 
 	return &ChatItemService{repo: repo, listRepo: listRepo}
 }
 
-func (s *ChatItemService) CreateItem(userId, listId int, username, description, chatlist_id string) (int, error) {
+func (s *ChatItemService) GetUsers(userId, listId int) ([]int, error) {
+	return s.repo.GetUsers(userId, listId)
+}
+
+func (s *ChatItemService) Create(userId, listId int, item chat.ChatItem) (int, error) {
 	_, err := s.listRepo.GetListById(userId, listId)
 	if err != nil {
 		// list does not exists or does not belongs to user
+		fmt.Println("ЗДЕсь????")
 		return 0, err
 	}
 
-	return s.repo.CreateItem(username, description, chatlist_id)
+	return s.repo.Create(listId, item)
 }
 
-// func (s *ChatItemService) GetAll(userId, listId int) ([]chat.ChatItem, error) {
-// 	return s.repo.GetAll(userId, listId)
-// }
+func (s *ChatItemService) GetAll(userId, listId int) ([]chat.ChatItem, error) {
+	return s.repo.GetAll(userId, listId)
+}
 
 // func (s *ChatItemService) GetById(userId, itemId int) (chat.ChatItem, error) {
 // 	return s.repo.GetById(userId, itemId)

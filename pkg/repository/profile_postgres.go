@@ -143,6 +143,7 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 		row := tx.QueryRow(createListQuery, desciptions[i].Description)
 		if err := row.Scan(&id); err != nil {
 			tx.Rollback()
+			fmt.Println("ОШИБКА в ХОБИБИ 1")
 			return list_id, err
 		}
 		list_id = append(list_id, id)
@@ -150,8 +151,10 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 
 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, userhobby_id) VALUES ($1, $2)", usersHobbyListsTable)
 	for i := 0; i < lengthOfHobbies; i++ {
+		fmt.Println(profId, "::", list_id[i])
 		_, err = tx.Exec(createUsersListQuery, profId, list_id[i])
 		if err != nil {
+			fmt.Println("ОШИБКА в ХОБИБИ 2")
 			tx.Rollback()
 			return list_id, err
 		}

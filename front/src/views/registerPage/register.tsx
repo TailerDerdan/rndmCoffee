@@ -98,16 +98,18 @@ export const RegistrationScreen = () => {
 								}
 								return;
 							}
-							const dataFromResponse = await response.json();
+							if (response.ok) {
+								const dataFromResponse = await response.json();
 
-							setToken(dataFromResponse.token);
-							setIdUser(dataFromResponse.id);
+								setToken(dataFromResponse.token);
+								setIdUser(dataFromResponse.id);
 
-							setTimeout(() => {
-								navigate("/auth_profile/contacts", {
-									replace: true,
-								});
-							}, 1);
+								setTimeout(() => {
+									navigate("/auth_profile/contacts", {
+										replace: true,
+									});
+								}, 1);
+							}
 						}}
 						action="http:://localhost:8000/auth/sign-up"
 						method="post"

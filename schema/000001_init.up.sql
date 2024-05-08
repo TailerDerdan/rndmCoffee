@@ -67,11 +67,11 @@ CREATE TABLE users_chat_lists
 
 CREATE TABLE chat_items
 (
-    id          serial       PRIMARY KEY,
-    username    varchar(255) not null,
-    description varchar(255)
-    chatlist_id int references chat_lists (id) on delete cascade not null
-    -- done        boolean      not null default false
+    id          serial                                           PRIMARY KEY,
+    username    varchar(255)                                     not null,
+    description                                                  varchar(255),
+    chatlist_id int references chat_lists (id) on delete cascade not null,
+    user_id     int references users (id)      on delete cascade not null
 );
 
 -- CREATE TABLE items_lists

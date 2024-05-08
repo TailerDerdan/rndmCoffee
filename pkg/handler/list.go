@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -36,6 +37,7 @@ func (h *Handler) findUsersByTime(c *gin.Context) {
 
 	list_id, err := h.services.ChatList.FindByTime(userId, input)
 	if err != nil {
+		fmt.Println("Ошибка по времени, человечек")
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -108,7 +110,7 @@ func (h *Handler) createList(c *gin.Context) {
 		return
 	}
 
-	chat_id, err := h.services.ChatList.CreateList(input)
+	chat_id, title, err := h.services.ChatList.CreateList(input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -116,6 +118,7 @@ func (h *Handler) createList(c *gin.Context) {
 
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"chat_id": chat_id,
+		"title":   title,
 	})
 }
 

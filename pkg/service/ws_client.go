@@ -1,11 +1,10 @@
 package service
 
 import (
-	"net/http"
-	"strconv"
+	"fmt"
+	"log"
 
 	chat "github.com/MerBasNik/rndmCoffee"
-	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
@@ -13,7 +12,7 @@ type Client struct {
 	*chat.Client
 }
 
-func (c *Client) writeChatItem(context *gin.Context, CreateItem func(int, int, string, string, string) (int, error)) {
+func (c *Client) writeChatItem(clientId string) {
 	defer func() {
 		c.Conn.Close()
 	}()
@@ -23,25 +22,15 @@ func (c *Client) writeChatItem(context *gin.Context, CreateItem func(int, int, s
 			return
 		}
 
-		userId, err := strconv.Atoi(c.Id)
-		if err != nil {
-			context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		listId, err := strconv.Atoi(message.Chatlist_id)
-		if err != nil {
-			context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		CreateItem(userId, listId, message.Username, message.Description, message.Chatlist_id)
+		message.User_id = clientId
+		fmt.Println(message.User_id, "айдишниккк")
 
 		c.Conn.WriteJSON(message)
+
 	}
 }
 
-func (c *Client) ReadChatItem(hub *Hub, context *gin.Context, CreateItem func(int, int, string, string, string) (int, error)) {
+func (c *Client) ReadChatItem(hub *Hub, clientId string) {
 	defer func() {
 		hub.Unregister <- c.Client
 		c.Conn.Close()
@@ -51,30 +40,19 @@ func (c *Client) ReadChatItem(hub *Hub, context *gin.Context, CreateItem func(in
 		_, m, err := c.Conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				log.Printf("error: %v", err)
 			}
 			break
 		}
-
-		userId, err := strconv.Atoi(c.Id)
-		if err != nil {
-			context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		listId, err := strconv.Atoi(c.RoomId)
-		if err != nil {
-			context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		CreateItem(userId, listId, c.Username, string(m), c.RoomId)
 
 		msg := &chat.ChatItem{
 			Description: string(m),
 			Chatlist_id: c.RoomId,
 			Username:    c.Username,
+			User_id:     clientId,
 		}
+
+		fmt.Println(msg)
 
 		hub.Broadcast <- msg
 	}

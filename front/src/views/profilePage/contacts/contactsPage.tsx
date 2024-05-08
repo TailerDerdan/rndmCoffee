@@ -26,12 +26,12 @@ export const UserContacts = () => {
 	const [telegramLinkUserError, setTelegramLinkUserError] = useState(false);
 	const [birthdayUser, setBirthdayUser] = useState("");
 
-	const [token, setToken] = useLocalStorage({
+	const [token] = useLocalStorage({
 		initialValue: "",
 		key: "token",
 	});
 
-	const [id_user, setIdUser] = useLocalStorage({
+	const [id_user] = useLocalStorage({
 		initialValue: -1,
 		key: "id_user",
 	});
@@ -39,6 +39,11 @@ export const UserContacts = () => {
 	const [profile_id, setProfileId] = useLocalStorage({
 		initialValue: -1,
 		key: "profile_id",
+	});
+
+	const [username, setUsername] = useLocalStorage({
+		initialValue: "",
+		key: "username",
 	});
 
 	const navigate = useNavigate();
@@ -105,7 +110,7 @@ export const UserContacts = () => {
 						if (!response.ok) {
 							return;
 						}
-
+						setUsername(nameUser);
 						const dataFromResponse = await response.json();
 
 						setProfileId(dataFromResponse.profile_id);

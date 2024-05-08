@@ -1,27 +1,20 @@
-import React from "react";
+import React, { useContext, useMemo } from "react";
 import styles from "./meetCard.module.css";
 import { LineSeparatorMeetCard } from "../icons/icons";
+import { WebsocketContext } from "../../contexts/websocket_provider";
 
 type MeetCardProps = {
 	chatId: number;
-	username: string;
-	userId: number;
 	title: string;
+	setActive: (active: boolean) => void;
+	userId: string;
+	username: string;
+	joinChat: (chatId: string) => void;
 };
 
 export const MeetCard = (props: MeetCardProps) => {
-	const { chatId, title, userId, username } = props;
-
-	const joinChat = (chatId: string) => {
-		const ws = new WebSocket(
-			`http://localhost:8000/api/ws/joinRoom/${chatId}?userId=${userId}&username=${username}`,
-		);
-		// if (ws.OPEN) {
-		// 	setConn(ws);
-		// 	router.push("/app");
-		// 	return;
-		// }
-	};
+	const { chatId, title, userId, username, setActive, joinChat } = props;
+	const { setConn } = useContext(WebsocketContext);
 
 	return (
 		<div className={styles.wrapper__meetCard}>
@@ -37,6 +30,16 @@ export const MeetCard = (props: MeetCardProps) => {
 			</div>
 			<div className={styles.wrapper__activities}>
 				<h2>{chatId}</h2>
+			</div>
+			<div>
+				<button
+					onClick={(event) => {
+						event.preventDefault();
+						joinChat(String(chatId));
+					}}
+				>
+					ЗАХОДИ!!!
+				</button>
 			</div>
 		</div>
 	);

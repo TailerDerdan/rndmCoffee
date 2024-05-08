@@ -17,10 +17,10 @@ func NewChatListPostgres(db *sqlx.DB) *ChatListPostgres {
 	return &ChatListPostgres{db: db}
 }
 
-func (r *ChatListPostgres) CreateList(requestCreateList chat.RequestCreateList) (int, error) {
+func (r *ChatListPostgres) CreateList(requestCreateList chat.RequestCreateList) (int, string, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
-		return 0, err
+		return 0, "", err
 	}
 
 	var id int
@@ -28,7 +28,7 @@ func (r *ChatListPostgres) CreateList(requestCreateList chat.RequestCreateList) 
 	row := tx.QueryRow(createListQuery, requestCreateList.Title)
 	if err := row.Scan(&id); err != nil {
 		tx.Rollback()
-		return 0, err
+		return 0, "", err
 	}
 
 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, chatlists_id) VALUES ($1, $2)", usersChatListsTable)
@@ -36,11 +36,11 @@ func (r *ChatListPostgres) CreateList(requestCreateList chat.RequestCreateList) 
 		_, err = tx.Exec(createUsersListQuery, requestCreateList.UsersId[i], id)
 		if err != nil {
 			tx.Rollback()
-			return 0, err
+			return 0, "", err
 		}
 	}
 
-	return id, tx.Commit()
+	return id, requestCreateList.Title, tx.Commit()
 }
 
 func (r *ChatListPostgres) GetAllLists(userId int) ([]chat.ChatList, error) {
@@ -100,6 +100,7 @@ func (r *ChatListPostgres) FindByTime(userId int, input chat.FindUserInput) (int
 
 	tx, err := r.db.Begin()
 	if err != nil {
+		fmt.Println("Ошибка в транзакцияхххх")
 		return id, err
 	}
 
@@ -107,6 +108,7 @@ func (r *ChatListPostgres) FindByTime(userId int, input chat.FindUserInput) (int
 	_, err = tx.Exec(createListQuery, userId, input.StartDay, input.EndDay, input.StartTime, input.EndTime)
 	if err != nil {
 		tx.Rollback()
+		fmt.Println("Ошибка в вставке в базу")
 		return id, err
 	}
 

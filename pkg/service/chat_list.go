@@ -13,7 +13,7 @@ func NewChatListService(repo repository.ChatList) *ChatListService {
 	return &ChatListService{repo: repo}
 }
 
-func (s *ChatListService) CreateList(requestCreateList chat.RequestCreateList) (int, error) {
+func (s *ChatListService) CreateList(requestCreateList chat.RequestCreateList) (int, string, error) {
 	return s.repo.CreateList(requestCreateList)
 }
 

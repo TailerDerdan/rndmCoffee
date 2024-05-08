@@ -1,12 +1,50 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
 	chat "github.com/MerBasNik/rndmCoffee"
 	"github.com/gin-gonic/gin"
 )
+
+// @Summary Get Chat Users
+// @Security ApiKeyAuth
+// @Tags chats items
+// @Description Get Chat Users
+// @ID get-chat-users
+// @Accept  json
+// @Produce  json
+// @Param   chat_id path int true "Chat Id"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/chats/{chat_id}/items/get_users [get]
+func (h *Handler) getUsers(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	chat_id, err := strconv.Atoi(c.Param("chat_id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+		return
+	}
+
+	users_id, err := h.services.ChatItem.GetUsers(userId, chat_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"users id": users_id,
+	})
+}
 
 // @Summary Create Chat Item
 // @Security ApiKeyAuth
@@ -41,7 +79,7 @@ func (h *Handler) createItem(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.ChatItem.CreateItem(userId, chat_id, input.Username, input.Description, input.Chatlist_id)
+	id, err := h.services.ChatItem.Create(userId, chat_id, input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -52,9 +90,9 @@ func (h *Handler) createItem(c *gin.Context) {
 	})
 }
 
-// type getAllListsItemsResponse struct {
-// 	Data []chat.ChatItem `json:"data"`
-// }
+type getAllListsItemsResponse struct {
+	Data []chat.ChatItem `json:"data"`
+}
 
 // @Summary Get All Chats Items
 // @Security ApiKeyAuth
@@ -69,29 +107,31 @@ func (h *Handler) createItem(c *gin.Context) {
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/chats/{chat_id}/items/get_all_items [get]
-// func (h *Handler) getAllItems(c *gin.Context) {
-// 	userId, err := getUserId(c)
-// 	if err != nil {
-// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
+func (h *Handler) getAllItems(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
-// 	chat_id, err := strconv.Atoi(c.Param("chat_id"))
-// 	if err != nil {
-// 		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
-// 		return
-// 	}
+	chat_id, err := strconv.Atoi(c.Param("chat_id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+		return
+	}
 
-// 	items, err := h.services.ChatItem.GetAll(userId, chat_id)
-// 	if err != nil {
-// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
+	items, err := h.services.ChatItem.GetAll(userId, chat_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
-// 	c.JSON(http.StatusOK, getAllListsItemsResponse{
-// 		Data: items,
-// 	})
-// }
+	fmt.Println(items, "И ПУСКАЙ КАПАЕТ КАПАЕТ С НЕБА")
+
+	c.JSON(http.StatusOK, getAllListsItemsResponse{
+		Data: items,
+	})
+}
 
 // @Summary Get Chat Item By Id
 // @Security ApiKeyAuth

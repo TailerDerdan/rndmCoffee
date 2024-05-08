@@ -12,10 +12,12 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 type MeetingFormProps = {
 	active: boolean;
 	setActive: (active: boolean) => void;
+	getChats: () => void;
+	createHandler: (chatId: number, title: string) => void;
 };
 
 export const MeetingForm = (props: MeetingFormProps) => {
-	const { active, setActive } = props;
+	const { active, setActive, getChats, createHandler } = props;
 
 	const [meetingName, setMeetingName] = useState("");
 
@@ -144,7 +146,7 @@ export const MeetingForm = (props: MeetingFormProps) => {
 							"http://localhost:8000/api/chats/create_chat",
 							{
 								method: "POST",
-								body: JSON.stringify(data),
+								body: JSON.stringify(dataForChat),
 								headers: {
 									"Content-Type": "application/json",
 									Authorization: `Bearer ${token}`,
@@ -154,9 +156,15 @@ export const MeetingForm = (props: MeetingFormProps) => {
 						);
 
 						if (responceCreateChat.ok) {
+							const answerCreateChat =
+								await responceCreateChat.json();
+							createHandler(
+								answerCreateChat.chat_id,
+								answerCreateChat.title,
+							);
+							getChats();
 						}
 					}
-
 					setTimeout(() => {
 						setActive(!active);
 					}, 1);

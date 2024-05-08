@@ -1,0 +1,9 @@
+.chatApp {
+    display: flex;
+    flex-direction: column;
+}
+
+.chatApp__chatWindow {
+    display: flex;
+    
+}

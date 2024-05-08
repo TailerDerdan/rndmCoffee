@@ -1964,3 +1964,141 @@ export const LineSeparatorMeetCard = () => {
 		</svg>
 	);
 };
+
+export const SendMessageIcon = () => {
+	return (
+		<svg
+			width="35"
+			height="35"
+			viewBox="0 0 35 35"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<g filter="url(#filter0_iiii_1591_7462)">
+				<path
+					d="M35 8C35 3.58172 31.4183 0 27 0H8C3.58172 0 0 3.58172 0 8V27C0 31.4183 3.58172 35 8 35H27C31.4183 35 35 31.4183 35 27V8Z"
+					fill="white"
+				/>
+				<path
+					d="M34 8C34 4.13401 30.866 1 27 1H8C4.13401 1 1 4.13401 1 8V27C1 30.866 4.13401 34 8 34H27C30.866 34 34 30.866 34 27V8Z"
+					stroke="#FF9D10"
+					strokeWidth="2"
+				/>
+				<path
+					d="M14.7587 17.8441L9.82426 17.4474C9.43741 17.3541 9.38214 16.8563 9.73742 16.6929L23.8774 10.5402C24.2485 10.3768 24.6353 10.7424 24.4538 11.0847L17.7983 24.2769C17.6167 24.6114 17.0956 24.557 17.0009 24.1991L16.3456 18.0541L22.0853 12.7648"
+					stroke="#4A4A4A"
+					strokeMiterlimit="10"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				/>
+			</g>
+			<defs>
+				<filter
+					id="filter0_iiii_1591_7462"
+					x="0"
+					y="0"
+					width="35"
+					height="35"
+					filterUnits="userSpaceOnUse"
+					colorInterpolationFilters="sRGB"
+				>
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
+					<feBlend
+						mode="normal"
+						in="SourceGraphic"
+						in2="BackgroundImageFix"
+						result="shape"
+					/>
+					<feColorMatrix
+						in="SourceAlpha"
+						type="matrix"
+						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+						result="hardAlpha"
+					/>
+					<feOffset dy="1" />
+					<feComposite
+						in2="hardAlpha"
+						operator="arithmetic"
+						k2="-1"
+						k3="1"
+					/>
+					<feColorMatrix
+						type="matrix"
+						values="0 0 0 0 0.890196 0 0 0 0 0.890196 0 0 0 0 0.890196 0 0 0 1 0"
+					/>
+					<feBlend
+						mode="normal"
+						in2="shape"
+						result="effect1_innerShadow_1591_7462"
+					/>
+					<feColorMatrix
+						in="SourceAlpha"
+						type="matrix"
+						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+						result="hardAlpha"
+					/>
+					<feOffset dx="1" />
+					<feComposite
+						in2="hardAlpha"
+						operator="arithmetic"
+						k2="-1"
+						k3="1"
+					/>
+					<feColorMatrix
+						type="matrix"
+						values="0 0 0 0 0.890196 0 0 0 0 0.890196 0 0 0 0 0.890196 0 0 0 1 0"
+					/>
+					<feBlend
+						mode="normal"
+						in2="effect1_innerShadow_1591_7462"
+						result="effect2_innerShadow_1591_7462"
+					/>
+					<feColorMatrix
+						in="SourceAlpha"
+						type="matrix"
+						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+						result="hardAlpha"
+					/>
+					<feOffset dx="-1" />
+					<feComposite
+						in2="hardAlpha"
+						operator="arithmetic"
+						k2="-1"
+						k3="1"
+					/>
+					<feColorMatrix
+						type="matrix"
+						values="0 0 0 0 0.890196 0 0 0 0 0.890196 0 0 0 0 0.890196 0 0 0 1 0"
+					/>
+					<feBlend
+						mode="normal"
+						in2="effect2_innerShadow_1591_7462"
+						result="effect3_innerShadow_1591_7462"
+					/>
+					<feColorMatrix
+						in="SourceAlpha"
+						type="matrix"
+						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+						result="hardAlpha"
+					/>
+					<feOffset dy="-1" />
+					<feComposite
+						in2="hardAlpha"
+						operator="arithmetic"
+						k2="-1"
+						k3="1"
+					/>
+					<feColorMatrix
+						type="matrix"
+						values="0 0 0 0 0.709804 0 0 0 0 0.709804 0 0 0 0 0.709804 0 0 0 1 0"
+					/>
+					<feBlend
+						mode="normal"
+						in2="effect3_innerShadow_1591_7462"
+						result="effect4_innerShadow_1591_7462"
+					/>
+				</filter>
+			</defs>
+		</svg>
+	);
+};

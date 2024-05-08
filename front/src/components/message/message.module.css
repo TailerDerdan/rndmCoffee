@@ -1,0 +1,32 @@
+.wrapper__messageSelf {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    padding: 3%;
+    border: 1px solid black;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: white;
+    max-width: 80%;
+}
+
+.wrapper__username {
+    width: 100%;
+    padding: 1% 0;
+}
+
+.wrapper__description {
+    width: 100%;
+    overflow-wrap: break-word;
+}
+
+.wrapper__messageRecv {
+    padding: 3%;
+    border: 1px solid black;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background-color: white;
+    max-width: 80%;
+}

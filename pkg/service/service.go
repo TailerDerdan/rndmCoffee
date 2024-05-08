@@ -26,7 +26,7 @@ type Profile interface {
 }
 
 type ChatList interface {
-	CreateList(requestCreateList chat.RequestCreateList) (int, error)
+	CreateList(requestCreateList chat.RequestCreateList) (int, string, error)
 	GetAllLists(userId int) ([]chat.ChatList, error)
 	GetListById(userId, listId int) (chat.ChatList, error)
 	DeleteList(userId, listId int) error
@@ -36,8 +36,9 @@ type ChatList interface {
 }
 
 type ChatItem interface {
-	CreateItem(userId, listId int, username, description, chatlist_id string) (int, error)
-	// GetAll(userId, listId int) ([]chat.ChatItem, error)
+	GetUsers(userId, listId int) ([]int, error)
+	Create(userId, listId int, item chat.ChatItem) (int, error)
+	GetAll(userId, listId int) ([]chat.ChatItem, error)
 	// GetById(userId, itemId int) (chat.ChatItem, error)
 	// Delete(userId, itemId int) error
 	// Update(userId, itemId int, input chat.UpdateItemInput) error

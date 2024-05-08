@@ -46,7 +46,7 @@ func (r *AuthPostgres) GetUserEmail(token string) (chat.User, error) {
 
 func (r *AuthPostgres) ResetPassword(email, password string) error {
 	query := fmt.Sprintf("UPDATE %s tl SET password_hash=$1 WHERE tl.email=$2", usersTable)
-	
+
 	_, err := r.db.Exec(query, password, email)
 
 	return err
@@ -54,7 +54,7 @@ func (r *AuthPostgres) ResetPassword(email, password string) error {
 
 func (r *AuthPostgres) DeleteUserToken(user chat.User) error {
 	query := fmt.Sprintf("UPDATE %s tl SET token=$1 WHERE tl.email=$2", usersTable)
-	
+
 	_, err := r.db.Exec(query, "", user.Email)
 
 	return err
@@ -62,7 +62,7 @@ func (r *AuthPostgres) DeleteUserToken(user chat.User) error {
 
 func (r *AuthPostgres) SetUserToken(token, email string) error {
 	query := fmt.Sprintf("UPDATE %s tl SET token=$1 WHERE tl.email=$2", usersTable)
-	
+
 	_, err := r.db.Exec(query, token, email)
 
 	return err

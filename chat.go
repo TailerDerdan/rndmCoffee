@@ -22,6 +22,7 @@ type ChatList struct {
 type ChatItem struct {
 	Id          int    `json:"id" db:"id"`
 	Chatlist_id string `json:"chatlist_id" db:"chatlist_id"`
+	User_id     string `json:"user_id" db:"user_id"`
 	Username    string `json:"username" db:"username" binding:"required"`
 	Description string `json:"description" db:"description"`
 }

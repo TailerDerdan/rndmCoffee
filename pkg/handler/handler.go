@@ -61,27 +61,26 @@ func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 			chats.PUT("/update_chat/:chat_id", h.updateList)
 			chats.DELETE("/delete_chat/:chat_id", h.deleteList)
 
-			items := chats.Group(":chat_id/items")
+			items := chats.Group("/:chat_id/items")
 			{
 				items.POST("/create_item", h.createItem)
-				// items.GET("/get_all_items", h.getAllItems)
+				items.GET("/get_all_items", h.getAllItems)
+				items.GET("/get_users", h.getUsers)
+				// items.GET("/get_item/:item_id", h.getItemById)
+				// items.PUT("/update_item/:item_id", h.updateItem)
+				// items.DELETE("/delete_item/:item_id", h.deleteItem)
 			}
 		}
+	}
 
-		// items := api.Group("/items")
-		// {
-		// 	items.GET("/get_item/:item_id", h.getItemById)
-		// 	items.PUT("/update_item/:item_id", h.updateItem)
-		// 	items.DELETE("/delete_item/:item_id", h.deleteItem)
-		// }
-
-		webSocketApi := api.Group("/ws")
-		{
-			webSocketApi.POST("/createRoom", wsHandler.CreateRoom)
-			webSocketApi.GET("/joinRoom/:roomId", func(c *gin.Context) {
-				wsHandler.JoinRoom(c, h.services.CreateItem)
-			})
-		}
+	webSocketApi := router.Group("/ws")
+	{
+		webSocketApi.POST("/createRoom", wsHandler.CreateRoom)
+		webSocketApi.GET("/joinRoom/:roomId", func(c *gin.Context) {
+			wsHandler.JoinRoom(c, h.services.Create)
+		})
+		webSocketApi.GET("/getRooms", wsHandler.GetRooms)
+		webSocketApi.GET("/getClients/:roomId", wsHandler.GetClients)
 	}
 
 	return router

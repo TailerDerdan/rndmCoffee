@@ -40,7 +40,7 @@ func (h *Handler) signUp(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"id": id,
+		"id":    id,
 		"token": token,
 	})
 }
@@ -80,7 +80,6 @@ func (h *Handler) signIn(c *gin.Context) {
 		"token": token,
 	})
 }
-
 
 // @Summary Reset Password
 // @Tags auth
