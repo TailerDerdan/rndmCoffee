@@ -32,16 +32,13 @@ export const WelcomePage = () => {
 						</div>
 						<div className={stylesWelcome.wrapper__welcomeText}>
 							<p className={stylesWelcome.welcomeText}>
-								Чтобы найти собеседника на чашку кофе,
+								Наше приложение создано для случайных встреч,
 							</p>
 							<p className={stylesWelcome.welcomeText}>
-								нам важно, чтобы ваши интересы
+								помогает в нахождении новых знакомств,
 							</p>
 							<p className={stylesWelcome.welcomeText}>
-								совпадали. Для качественного поиска нам
-							</p>
-							<p className={stylesWelcome.welcomeText}>
-								нужна информация о вас.
+								ты красавчик, что зарегистрировался!
 							</p>
 						</div>
 					</div>

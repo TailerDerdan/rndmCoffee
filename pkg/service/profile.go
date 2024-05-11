@@ -53,6 +53,10 @@ func (s *ProfileService) DeleteHobby(profId, hobbyId int) error {
 	return s.repo.DeleteHobby(profId, hobbyId)
 }
 
+func (s *ProfileService) GetProfileId(userId int) (int, error) {
+	return s.repo.GetProfileId(userId)
+}
+
 // func (s *ProfileService) GetAvatar(userId int, c *gin.Context) (string, error) {
 // 	err = s.repo.Profile.GetAvatar(userId, id)
 // 	if err != nil {

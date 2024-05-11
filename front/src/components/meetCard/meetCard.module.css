@@ -1,23 +1,47 @@
 .wrapper__meetCard {
 	width: 100%;
+	height: 65%;
 	display: flex;
 	flex-direction: column;
-	padding: 2%;
+	padding: 6%;
+	border-radius: 20px;
+	border: 1px solid black;
+	align-items: center;
+	box-sizing: border-box;
+	cursor: pointer;
+	box-shadow: 25px 25px 30px #B3B3B3;
+}
+
+.wrapper__meetCard:hover {
+	box-shadow: 10px 10px 50px white;
 }
 
 .wrapper__text {
 	width: 100%;
 	display: flex;
 	place-content: center center;
+	border-bottom: 1px solid black;
+	border-top: 1px solid black;
+	padding: 15% 0;
+}
+
+.wrapper__users {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	padding-bottom: 10%;
+}
+
+.wrapper__activities {
+	display: flex;
+	width: 100%;
+	justify-content: flex-start;
+	padding-top: 10%;
 }
 
 .text {
 	text-align: left;
 	font-size: var(--header-meet-card-font-size);
 	font-weight: var(--header-meet-card-font-weight);
-}
-
-.wrapper__separator {
-	width: 100%;
-	padding: 2% 0;
 }

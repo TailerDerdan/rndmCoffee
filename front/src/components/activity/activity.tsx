@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./activity.module.css";
 import { TypeOfActivities } from "../../data/types";
 
@@ -14,9 +14,21 @@ export const Activity = (props: ActivityProps) => {
 
 	let classesForBlock = styles.wrapper__activity;
 	let classesForText = styles.activity;
-	const index = activities.indexOf(title);
+	let indexAct = -1;
 
-	if (index !== -1) {
+	activities.forEach((act, index) => {
+		if (act.description === title.description) {
+			indexAct = index;
+		}
+	});
+
+	useEffect(() => {
+		if (indexAct !== -1) {
+			setActive(true);
+		}
+	}, []);
+
+	if (indexAct !== -1) {
 		classesForBlock += " " + styles.wrapper__activity__active;
 		classesForText += " " + styles.activity__active;
 	}
@@ -25,13 +37,13 @@ export const Activity = (props: ActivityProps) => {
 		if (active) {
 			classesForBlock += " " + styles.wrapper__activity__active;
 			classesForText += " " + styles.activity__active;
-			if (index === -1) {
+			if (indexAct === -1) {
 				setActivities([...activities, title]);
 			}
 		} else {
 			classesForBlock = styles.wrapper__activity;
 			classesForText = styles.activity;
-			if (index !== -1) {
+			if (indexAct !== -1) {
 				setActivities(activities.filter((elem) => elem !== title));
 			}
 		}

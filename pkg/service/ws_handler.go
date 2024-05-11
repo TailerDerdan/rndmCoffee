@@ -114,7 +114,7 @@ func (h *HandlerWS) JoinRoom(c *gin.Context, CreateItem func(userId, listId int,
 	h.hub.Broadcast <- m
 	fmt.Println("7")
 
-	go cl.writeChatItem(clientId)
+	go cl.writeChatItem()
 	cl.ReadChatItem(h.hub, clientId)
 	fmt.Println("8")
 }

@@ -20,17 +20,35 @@ export const HomePage = () => {
 	let classesForIcon = styles.mainContent__iconMan;
 	let classesForForm =
 		styles.mainContent__form + " " + styles.wrapper__hidden;
-	let classesForChat = styles.wrapper__hidden;
+	let classesForChat =
+		styles.mainContent__chat + " " + styles.wrapper__hidden;
 	if (activeForm) {
 		classesForIcon += " " + styles.wrapper__hidden;
 		classesForForm = styles.mainContent__form;
+		classesForChat += " " + styles.wrapper__hidden;
 	} else {
 		classesForIcon = styles.mainContent__iconMan;
 		classesForForm += " " + styles.wrapper__hidden;
 	}
 	if (activeChat) {
 		classesForIcon += " " + styles.wrapper__hidden;
+		classesForChat = styles.mainContent__chat;
 	}
+
+	const [token] = useLocalStorage({
+		initialValue: "",
+		key: "token",
+	});
+
+	const [profile_id, setProfileId] = useLocalStorage({
+		initialValue: -1,
+		key: "profile_id",
+	});
+
+	const [username, setUsername] = useLocalStorage({
+		initialValue: "",
+		key: "username",
+	});
 
 	const createHandler = async (chatId: number, title: string) => {
 		const data = {
@@ -51,11 +69,6 @@ export const HomePage = () => {
 			console.log(err);
 		}
 	};
-
-	const [token] = useLocalStorage({
-		initialValue: "",
-		key: "token",
-	});
 
 	const getChats = async () => {
 		try {
@@ -81,12 +94,10 @@ export const HomePage = () => {
 					credentials: "include",
 				},
 			);
-
+			const dataFromDB = await resGetChats.json();
+			const dataFromWS = await resGetRooms.json();
 			if (resGetChats.ok && resGetRooms.ok) {
-				const dataFromDB = await resGetChats.json();
-				const dataFromWS = await resGetRooms.json();
-
-				let arrChats: Array<Chat> = [];
+				const arrChats: Array<Chat> = [];
 				dataFromDB.data.forEach(
 					(chat: { id: string; clients: null; title: string }) => {
 						arrChats.push({
@@ -109,7 +120,6 @@ export const HomePage = () => {
 					}
 				});
 				roomsNotCreated.forEach((room) => {
-					console.log("чаты создалисььььь");
 					createHandler(room.id, room.title);
 				});
 				setChats(arrChats);
@@ -128,30 +138,17 @@ export const HomePage = () => {
 		key: "id_user",
 	});
 
-	const [username] = useLocalStorage({
-		initialValue: "",
-		key: "username",
-	});
-
 	const joinChat = (chatId: string) => {
-		let ws = new WebSocket(
+		const ws = new WebSocket(
 			`ws://127.0.0.1:8000/ws/joinRoom/${chatId}?userId=${id_user}&username=${username}`,
 		);
 
 		if (ws.OPEN) {
-			console.log("СЕРВЕР ОТКРЫТ!!!!!!!!!!!!!!!");
 			setConn(ws);
 			setActiveChat(true);
 			return;
 		}
 	};
-
-	// let connSaved: WebSocket | null = null;
-	// if (conn !== null) {
-	// 	connSaved = useMemo(() => {
-	// 		return conn;
-	// 	}, [conn]);
-	// }
 
 	return (
 		<div className={styles.homePage}>
@@ -179,11 +176,7 @@ export const HomePage = () => {
 						<div className={styles.wrapper__meetCard} key={index}>
 							<MeetCard
 								chatId={chat.id}
-								title={chat.title}
 								key={index}
-								setActive={setActiveChat}
-								username={username}
-								userId={id_user}
 								joinChat={joinChat}
 							/>
 						</div>
@@ -197,7 +190,7 @@ export const HomePage = () => {
 						createHandler={createHandler}
 					/>
 				</div>
-				<div>
+				<div className={classesForChat}>
 					<Chat
 						setActive={setActiveChat}
 						active={activeChat}

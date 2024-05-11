@@ -23,10 +23,19 @@ func (r *ProfilePostgres) CreateProfile(userId int, profile chat.Profile) (int, 
 		return 0, err
 	}
 
+	var email string
+	query := fmt.Sprintf("SELECT tl.email FROM %s tl WHERE tl.id=$1", usersTable)
+	if err := r.db.Get(&email, query, userId); err != nil {
+		fmt.Println("ЛСП")
+		tx.Rollback()
+		return 0, err
+	}
+
 	var id int
-	query := fmt.Sprintf("INSERT INTO %s (name, surname, photo, telegram, country, city, birthday) values ($1, $2, $3, $4, $5, $6, $7) RETURNING id", usersProfileTable)
-	row := r.db.QueryRow(query, profile.Name, profile.Surname, profile.Photo, profile.Telegram, profile.Country, profile.City, profile.Birthday)
+	query = fmt.Sprintf("INSERT INTO %s (name, surname, email, photo, city, birthday) values ($1, $2, $3, $4, $5, $6) RETURNING id", usersProfileTable)
+	row := r.db.QueryRow(query, profile.Name, profile.Surname, email, profile.Photo, profile.City, profile.Birthday)
 	if err := row.Scan(&id); err != nil {
+		fmt.Println("ФИЛИПП КИРКОРОВ")
 		tx.Rollback()
 		return 0, err
 	}
@@ -34,6 +43,7 @@ func (r *ProfilePostgres) CreateProfile(userId int, profile chat.Profile) (int, 
 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, profile_id) VALUES ($1, $2)", usersProfileListsTable)
 	_, err = tx.Exec(createUsersListQuery, userId, id)
 	if err != nil {
+		fmt.Println("ТИМАТИ")
 		tx.Rollback()
 		return 0, err
 	}
@@ -41,10 +51,19 @@ func (r *ProfilePostgres) CreateProfile(userId int, profile chat.Profile) (int, 
 	return id, tx.Commit()
 }
 
+func (r *ProfilePostgres) GetProfileId(userId int) (int, error) {
+	var prof_id int
+
+	query := fmt.Sprintf(`SELECT tl.profile_id FROM %s tl WHERE tl.user_id=$1`, usersProfileListsTable)
+	err := r.db.Get(&prof_id, query, userId)
+
+	return prof_id, err
+}
+
 func (r *ProfilePostgres) GetProfile(userId, profileId int) (chat.Profile, error) {
 	var profile chat.Profile
 
-	query := fmt.Sprintf(`SELECT tl.id, tl.name, tl.surname, tl.photo, tl.telegram, tl.country, tl.city, tl.birthday FROM %s tl INNER JOIN %s ul on tl.id = ul.profile_id WHERE ul.user_id = $1 AND ul.profile_id = $2`,
+	query := fmt.Sprintf(`SELECT tl.id, tl.name, tl.surname, tl.email, tl.photo, tl.city, tl.birthday FROM %s tl INNER JOIN %s ul on tl.id = ul.profile_id WHERE ul.user_id = $1 AND ul.profile_id = $2`,
 		usersProfileTable, usersProfileListsTable)
 	err := r.db.Get(&profile, query, userId, profileId)
 
@@ -68,27 +87,25 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 		argId++
 	}
 
+	if input.Email != nil {
+		setValues = append(setValues, fmt.Sprintf("email=$%d", argId))
+		args = append(args, *input.Email)
+		argId++
+		query := fmt.Sprintf("UPDATE %s tl SET email=$1 WHERE tl.id=$2", usersTable)
+		if _, err := r.db.Exec(query, input.Email, userId); err != nil {
+			return err
+		}
+	}
+
 	if input.Photo != nil {
 		setValues = append(setValues, fmt.Sprintf("photo=$%d", argId))
 		args = append(args, *input.Photo)
 		argId++
 	}
 
-	if input.Country != nil {
-		setValues = append(setValues, fmt.Sprintf("country=$%d", argId))
-		args = append(args, *input.Country)
-		argId++
-	}
-
 	if input.City != nil {
 		setValues = append(setValues, fmt.Sprintf("city=$%d", argId))
 		args = append(args, *input.City)
-		argId++
-	}
-
-	if input.Telegram != nil {
-		setValues = append(setValues, fmt.Sprintf("telegram=$%d", argId))
-		args = append(args, *input.Telegram)
 		argId++
 	}
 
@@ -135,21 +152,25 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 	if err != nil {
 		return list_id, err
 	}
+	fmt.Println("11111111111111 ", hobbies)
 
 	createListQuery := fmt.Sprintf("SELECT tl.id FROM %s tl WHERE tl.description=$1", userHobbyTable)
-	var desciptions = hobbies["description"]
-	var lengthOfHobbies = len(desciptions)
+	list_hobbies := make([]string, 0, len(hobbies))
+	for _, values := range hobbies {
+		for i := 0; i < len(values); i++ {
+			list_hobbies = append(list_hobbies, string(values[i].Description))	
+		}
+	}
+	var lengthOfHobbies = len(list_hobbies)
 	for i := 0; i < lengthOfHobbies; i++ {
-		row := tx.QueryRow(createListQuery, desciptions[i].Description)
-		if err := row.Scan(&id); err != nil {
+		if err := r.db.Get(&id, createListQuery, list_hobbies[i]); err != nil {
 			tx.Rollback()
-			fmt.Println("ОШИБКА в ХОБИБИ 1")
 			return list_id, err
 		}
 		list_id = append(list_id, id)
 	}
 
-	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, userhobby_id) VALUES ($1, $2)", usersHobbyListsTable)
+	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (prof_id, userhobby_id) VALUES ($1, $2)", usersHobbyListsTable)
 	for i := 0; i < lengthOfHobbies; i++ {
 		fmt.Println(profId, "::", list_id[i])
 		_, err = tx.Exec(createUsersListQuery, profId, list_id[i])
@@ -166,7 +187,7 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 func (r *ProfilePostgres) GetAllHobby(profId int) ([]chat.UserHobby, error) {
 	var hobbylist []chat.UserHobby
 
-	query := fmt.Sprintf("SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id WHERE ul.user_id = $1",
+	query := fmt.Sprintf("SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id WHERE ul.prof_id = $1",
 		userHobbyTable, usersHobbyListsTable)
 	err := r.db.Select(&hobbylist, query, profId)
 
@@ -174,7 +195,7 @@ func (r *ProfilePostgres) GetAllHobby(profId int) ([]chat.UserHobby, error) {
 }
 
 func (r *ProfilePostgres) DeleteHobby(profId, hobbyId int) error {
-	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.userhobby_id AND ul.user_id=$1 AND ul.userhobby_id=$2",
+	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.userhobby_id AND ul.prof_id=$1 AND ul.userhobby_id=$2",
 		userHobbyTable, usersHobbyListsTable)
 	_, err := r.db.Exec(query, profId, hobbyId)
 

@@ -36,9 +36,7 @@ export const UserPath = (props: UserPathProps) => {
 		<div className={styles.wrapper__userPath}>
 			<div className={styles.userPath__list}>
 				<ol className={styles.list}>
-					<li className={classesForFirstElList}>
-						Персональная информация
-					</li>
+					<li className={classesForFirstElList}>Контактные данные</li>
 					<div className={styles.lineSeparator}>
 						{<LineSeparator />}
 					</div>

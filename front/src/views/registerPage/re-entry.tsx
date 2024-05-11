@@ -33,6 +33,21 @@ export const ReEntryScreen = () => {
 		key: "token",
 	});
 
+	const [id_user, setUserId] = useLocalStorage({
+		initialValue: -1,
+		key: "id_user",
+	});
+
+	const [profile_id, setProfileId] = useLocalStorage({
+		initialValue: -1,
+		key: "profile_id",
+	});
+
+	const [username, setUsername] = useLocalStorage({
+		initialValue: "",
+		key: "username",
+	});
+
 	const navigate = useNavigate();
 
 	return (
@@ -83,15 +98,56 @@ export const ReEntryScreen = () => {
 								}
 								return;
 							}
-							const dataFromResponse = await response.json();
+							if (response.ok) {
+								const dataFromResponse = await response.json();
+								setToken(dataFromResponse.token);
+								setUserId(dataFromResponse.id);
 
-							setToken(dataFromResponse.token);
+								const responseProfId = await fetch(
+									"http://localhost:8000/api/profile/get_profile_id",
+									{
+										method: "GET",
+										headers: {
+											"Content-Type": "application/json",
+											Authorization: `Bearer ${dataFromResponse.token}`,
+										},
+										credentials: "include",
+									},
+								);
 
-							setTimeout(() => {
-								navigate("/main/home", {
-									replace: true,
-								});
-							}, 1);
+								if (responseProfId.ok) {
+									const profId = await responseProfId.json();
+									setProfileId(profId);
+
+									const responseUsername = await fetch(
+										`http://localhost:8000/api/profile/get_profile/${profile_id}`,
+										{
+											method: "GET",
+											headers: {
+												"Content-Type":
+													"application/json",
+												Authorization: `Bearer ${token}`,
+											},
+											credentials: "include",
+										},
+									);
+
+									console.log(responseUsername.status);
+
+									if (responseUsername.ok) {
+										const dataFromProfile =
+											await responseUsername.json();
+										console.log(dataFromProfile);
+										setUsername(dataFromProfile.data.name);
+									}
+
+									setTimeout(() => {
+										navigate("/main/home", {
+											replace: true,
+										});
+									}, 1);
+								}
+							}
 						}}
 						action="http:://localhost:8000/auth/sign-in"
 						method="post"

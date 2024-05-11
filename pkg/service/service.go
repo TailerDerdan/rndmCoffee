@@ -6,6 +6,7 @@ import (
 )
 
 type Authorization interface {
+	GetUser(email, password string) (chat.User, error)
 	CreateUser(user chat.User) (int, error)
 	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)
@@ -17,7 +18,7 @@ type Profile interface {
 	CreateProfile(userId int, profile chat.Profile) (int, error)
 	GetProfile(userId, profileId int) (chat.Profile, error)
 	EditProfile(userId, profileId int, input chat.UpdateProfile) error
-
+	GetProfileId(userId int) (int, error)
 	CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error)
 	GetAllHobby(profId int) ([]chat.UserHobby, error)
 	DeleteHobby(profId, hobbyId int) error
@@ -26,13 +27,19 @@ type Profile interface {
 }
 
 type ChatList interface {
-	CreateList(requestCreateList chat.RequestCreateList) (int, string, error)
+	CreateList(input chat.UsersForChat) (int, error)
+	RenameChat(userId, chatId int, chat chat.UpdateChat) error
 	GetAllLists(userId int) ([]chat.ChatList, error)
 	GetListById(userId, listId int) (chat.ChatList, error)
 	DeleteList(userId, listId int) error
 	UpdateList(userId, listId int, input chat.UpdateListInput) error
-	FindByTime(userId int, input chat.FindUserInput) (int, error)
-	FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error)
+	FindByTime(userId int, input chat.FindUserInput) ([]int, []chat.UsersInfo, error)
+	FindThreeByHobby(list_users []int) ([]chat.UserHobby, error)
+	FindTwoByHobby(list_users []int) ([]chat.UserHobby, error)
+	DeleteFindUsers(input chat.UsersForChat) error
+	GetUserByListId(listId int) ([]int, error)
+	GetUserAvatar(users_id []int) ([]string, error)
+	UpdateFindUsersTable(users_info []chat.UsersInfo, count int) error
 }
 
 type ChatItem interface {

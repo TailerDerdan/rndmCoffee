@@ -22,6 +22,7 @@ import (
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/chats/find_chats_users [post]
+
 func (h *Handler) findUsersByTime(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -35,16 +36,56 @@ func (h *Handler) findUsersByTime(c *gin.Context) {
 		return
 	}
 
-	list_id, err := h.services.ChatList.FindByTime(userId, input)
+	var list_id []int
+	var users_info []chat.UsersInfo
+	if input.Count == 23 {
+		input.Count = 2
+		list_id, users_info, err = h.services.ChatList.FindByTime(userId, input)
+		fmt.Println(list_id, "шдгцпуавзшцуавзщцунвпгцру")
+		if err != nil {
+			input.Count = 3
+			list_id, users_info, err = h.services.ChatList.FindByTime(userId, input)
+			if err != nil {
+				NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+				return
+			}
+		}
+	} else {
+		list_id, users_info, err = h.services.ChatList.FindByTime(userId, input)
+		if err != nil {
+			NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	err = h.services.ChatList.UpdateFindUsersTable(users_info, input.Count)
 	if err != nil {
-		fmt.Println("Ошибка по времени, человечек")
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"finded_user_id_for_chat": list_id,
-	})
+	var lists []int
+	if input.Count == 2 {
+		if len(list_id) == 2 {
+			lists = list_id
+		}
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"finded_user_id_for_chat": lists,
+		})
+	}
+	if input.Count == 3 {
+		if len(list_id) == 3 {
+			lists = list_id
+		}
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"finded_user_id_for_chat": lists,
+		})
+	}
+}
+
+type getHobbyAndIdResponse struct {
+	Data     []chat.UserHobby `json:"data"`
+	Users_id []int            `json:"users_id"`
 }
 
 // @Summary Find Users by hobby for chat
@@ -73,21 +114,64 @@ func (h *Handler) findUsersByHobby(c *gin.Context) {
 		return
 	}
 
-	list_id, err := h.services.ChatList.FindByTime(userId, input)
+	var list_id []int
+	var users_info []chat.UsersInfo
+	if input.Count == 23 {
+		input.Count = 2
+		list_id, users_info, err = h.services.ChatList.FindByTime(userId, input)
+		if err != nil {
+			input.Count = 3
+			list_id, users_info, err = h.services.ChatList.FindByTime(userId, input)
+			if err != nil {
+				NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+				return
+			}
+		}
+	} else {
+		list_id, users_info, err = h.services.ChatList.FindByTime(userId, input)
+		if err != nil {
+			NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	err = h.services.ChatList.UpdateFindUsersTable(users_info, input.Count)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	lists, err := h.services.ChatList.FindByHobby(userId, list_id)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
+	list_id = append(list_id, userId)
+	var ids []int
+	var lists []chat.UserHobby
+	if input.Count == 2 {
+		if len(list_id) == 2 {
+			lists, err = h.services.ChatList.FindTwoByHobby(list_id)
+			if err != nil {
+				NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+				return
+			}
+			ids = list_id
+		}
+		c.JSON(http.StatusOK, getHobbyAndIdResponse{
+			Data:     lists,
+			Users_id: ids,
+		})
 	}
-
-	c.JSON(http.StatusOK, getAllHobbyResponse{
-		Data: lists,
-	})
+	if input.Count == 3 {
+		if len(list_id) == 3 {
+			lists, err = h.services.ChatList.FindThreeByHobby(list_id)
+			if err != nil {
+				NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+				return
+			}
+			ids = list_id
+		}
+		c.JSON(http.StatusOK, getHobbyAndIdResponse{
+			Data:     lists,
+			Users_id: ids,
+		})
+	}
 }
 
 // @Summary Create chat
@@ -104,13 +188,19 @@ func (h *Handler) findUsersByHobby(c *gin.Context) {
 // @Failure default {object} errorResponse
 // @Router /api/chats/create_chat [post]
 func (h *Handler) createList(c *gin.Context) {
-	var input chat.RequestCreateList
+	var input chat.UsersForChat
 	if err := c.BindJSON(&input); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	chat_id, title, err := h.services.ChatList.CreateList(input)
+	chat_id, err := h.services.ChatList.CreateList(input)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	err = h.services.ChatList.DeleteFindUsers(input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -118,7 +208,6 @@ func (h *Handler) createList(c *gin.Context) {
 
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"chat_id": chat_id,
-		"title":   title,
 	})
 }
 
@@ -156,6 +245,11 @@ func (h *Handler) getAllLists(c *gin.Context) {
 	})
 }
 
+type getListsResponse struct {
+	Data     chat.ChatList `json:"data"`
+	Users_id []int         `json:"users_id"`
+}
+
 // @Summary Get Chat By Id
 // @Security ApiKeyAuth
 // @Tags chats
@@ -182,13 +276,23 @@ func (h *Handler) getListById(c *gin.Context) {
 		return
 	}
 
-	list, err := h.services.ChatList.GetListById(userId, chat_id)
+	chat, err := h.services.ChatList.GetListById(userId, chat_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, list)
+	var users_id []int
+	users_id, err = h.services.ChatList.GetUserByListId(chat_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, getListsResponse{
+		Data:     chat,
+		Users_id: users_id,
+	})
 }
 
 // @Summary Update Chat
@@ -267,4 +371,119 @@ func (h *Handler) deleteList(c *gin.Context) {
 	c.JSON(http.StatusOK, statusResponse{
 		Status: "ok",
 	})
+}
+
+type getChatInfoResponse struct {
+	Data      []chat.UserHobby `json:"data"`
+	UsersInfo map[int]string   `json:"users_info"`
+}
+
+// @Summary Get Info For Chat By Id
+// @Security ApiKeyAuth
+// @Tags chats
+// @Description get info chat by id
+// @ID get-info-chat-by-id
+// @Accept  json
+// @Produce  json
+// @Param   chat_id path int true "Chat Id"
+// @Success 200 {object} getChatInfoResponse
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/chats/get_info_for_chat/{chat_id} [get]
+func (h *Handler) getInfoForListById(c *gin.Context) {
+	chat_id, err := strconv.Atoi(c.Param("chat_id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	var users_id []int
+	users_id, err = h.services.ChatList.GetUserByListId(chat_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	var users_avatar []string
+	users_avatar, err = h.services.ChatList.GetUserAvatar(users_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	fmt.Println("000000 ", users_avatar)
+
+	users_info := make(map[int]string, len(users_id))
+	for i := 0; i < len(users_id); i++ {
+		users_info[users_id[i]] = users_avatar[i]
+	}
+
+	fmt.Println("111111 ", users_info)
+
+	var lists []chat.UserHobby
+	if len(users_id) == 2 {
+		lists, err = h.services.ChatList.FindTwoByHobby(users_id)
+		if err != nil {
+			NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+		c.JSON(http.StatusOK, getChatInfoResponse{
+			Data:      lists,
+			UsersInfo: users_info,
+		})
+	}
+	if len(users_id) == 3 {
+		lists, err = h.services.ChatList.FindThreeByHobby(users_id)
+		if err != nil {
+			NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+		c.JSON(http.StatusOK, getChatInfoResponse{
+			Data:      lists,
+			UsersInfo: users_info,
+		})
+	}
+}
+
+// @Summary Rename Chat
+// @Security ApiKeyAuth
+// @Tags chats
+// @Description rename chat
+// @ID rename-chat
+// @Accept  json
+// @Produce  json
+// @Param   chat_id path int true "Chat Id"
+// @Param input body chat.UpdateChat true "Chat Name"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/chats/rename_chat/{chat_id} [put]
+func (h *Handler) renameChat(c *gin.Context) {
+	user_id, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	var input chat.UpdateChat
+	if err := c.BindJSON(&input); err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	chat_id, err := strconv.Atoi(c.Param("chat_id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	err = h.services.ChatList.RenameChat(user_id, chat_id, input)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, statusResponse{"ok"})
 }

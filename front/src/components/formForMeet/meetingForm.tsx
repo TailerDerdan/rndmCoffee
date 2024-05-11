@@ -19,8 +19,6 @@ type MeetingFormProps = {
 export const MeetingForm = (props: MeetingFormProps) => {
 	const { active, setActive, getChats, createHandler } = props;
 
-	const [meetingName, setMeetingName] = useState("");
-
 	const [dayStart, setDayStart] = useState("");
 	const [errorDayStart, setErrorDayStart] = useState(false);
 	const [dayEnd, setDayEnd] = useState("");
@@ -32,6 +30,8 @@ export const MeetingForm = (props: MeetingFormProps) => {
 	const [errorTimeEnd, setErrorTimeEnd] = useState(false);
 
 	const [checkboxAnswer, setCheckboxAnswer] = useState(false);
+	const [checkboxTwo, setCheckboxTwo] = useState(false);
+	const [checkboxThree, setCheckboxThree] = useState(false);
 
 	let classesForForm =
 		stylesForm.meetingForm + " " + stylesForm.meetingForm__notActive;
@@ -47,11 +47,6 @@ export const MeetingForm = (props: MeetingFormProps) => {
 		key: "token",
 	});
 
-	const [id_user] = useLocalStorage({
-		initialValue: "",
-		key: "id_user",
-	});
-
 	const dataTime = new Date();
 
 	const hourMinute = `${dataTime.getHours()}:${dataTime.getMinutes()}`;
@@ -61,12 +56,40 @@ export const MeetingForm = (props: MeetingFormProps) => {
 			<form
 				onSubmit={async (event) => {
 					event.preventDefault();
+					let count = 2;
+					if (checkboxTwo) {
+						count = 2;
+					}
+					if (checkboxThree) {
+						count = 3;
+					}
+					if (checkboxTwo && checkboxThree) {
+						count = 23;
+					}
 					const data = {
 						endday: dayEnd,
 						endtime: timeEnd,
 						startday: dayStart,
 						starttime: timeStart,
+						count: count,
 					};
+
+					if (data.endday.length === 0) {
+						setErrorDayEnd(true);
+						return;
+					}
+					if (data.startday.length === 0) {
+						setErrorDayStart(true);
+						return;
+					}
+					if (data.endtime.length === 0) {
+						setErrorTimeEnd(true);
+						return;
+					}
+					if (data.starttime.length === 0) {
+						setErrorTimeStart(true);
+						return;
+					}
 
 					const arrDayStart = dayStart.split("-");
 					const yearMonthDayStart = arrDayStart.map((str) =>
@@ -131,16 +154,16 @@ export const MeetingForm = (props: MeetingFormProps) => {
 						credentials: "include",
 					});
 
+					if (!response.ok) {
+						setActive(!active);
+					}
+
 					if (response.ok) {
 						const dataFromResponse = await response.json();
-
 						const dataForChat = {
-							title: "ЫЫЫЫЫЫ",
-							usersId: [
-								id_user,
-								dataFromResponse.finded_user_id_for_chat,
-							],
+							users_id: dataFromResponse.finded_user_id_for_chat,
 						};
+						console.log(dataForChat);
 
 						const responceCreateChat = await fetch(
 							"http://localhost:8000/api/chats/create_chat",
@@ -156,6 +179,9 @@ export const MeetingForm = (props: MeetingFormProps) => {
 						);
 
 						if (responceCreateChat.ok) {
+							console.log(
+								"АААААААААААААААААААААААААААААААААААААААААААААААА",
+							);
 							const answerCreateChat =
 								await responceCreateChat.json();
 							createHandler(
@@ -164,10 +190,11 @@ export const MeetingForm = (props: MeetingFormProps) => {
 							);
 							getChats();
 						}
+
+						setTimeout(() => {
+							setActive(!active);
+						}, 1);
 					}
-					setTimeout(() => {
-						setActive(!active);
-					}, 1);
 				}}
 				action="http://localhost:8000/api/profile/create_profile"
 				method="post"
@@ -176,19 +203,6 @@ export const MeetingForm = (props: MeetingFormProps) => {
 					<h1 className={stylesForm.meetingForm__header}>
 						Создание встречу
 					</h1>
-				</div>
-				<div className={stylesContacts.wrapper__inputs}>
-					{
-						<TextField
-							id={"MeetingName"}
-							textLabel={"Название встречи"}
-							typeInput={"text"}
-							inputData={meetingName}
-							setInput={setMeetingName}
-							location={LocationInputField.Profile}
-							typeInputOnProfile={TypeInputOnProfile.Single}
-						/>
-					}
 				</div>
 				<div className={stylesContacts.wrapper__inputs}>
 					<div className={stylesContacts.wrapper__input__lfs}>
@@ -254,14 +268,50 @@ export const MeetingForm = (props: MeetingFormProps) => {
 						}
 					</div>
 				</div>
+				<div className={stylesForm.wrapper__peopleMeeting}>
+					<legend className={stylesForm.peopleMeeting__header}>
+						Людей на встрече:
+					</legend>
+					<div className={stylesForm.wrapper__choiceCountPeople}>
+						<input
+							type="checkbox"
+							id="twoHuman"
+							className={stylesForm.peopleMeeting__input}
+							onChange={() => {
+								setCheckboxTwo(!checkboxTwo);
+							}}
+						/>
+						<label
+							htmlFor="twoHuman"
+							className={stylesForm.peopleMeeting__label}
+						>
+							2
+						</label>
+					</div>
+					<div className={stylesForm.wrapper__choiceCountPeople}>
+						<input
+							type="checkbox"
+							id="threeHuman"
+							className={stylesForm.peopleMeeting__input}
+							onChange={() => {
+								setCheckboxThree(!checkboxThree);
+							}}
+						/>
+						<label
+							htmlFor="threeHuman"
+							className={stylesForm.peopleMeeting__label}
+						>
+							3
+						</label>
+					</div>
+				</div>
 				<div className={stylesForm.meetingForm__addParams}>
 					<div className={stylesForm.addParams__input}>
 						<input
 							id="AnswerYes"
 							type="checkbox"
 							className={stylesForm.input__checkbox}
-							onChange={(event) => {
-								event.preventDefault();
+							onChange={() => {
 								setCheckboxAnswer(!checkboxAnswer);
 							}}
 						/>

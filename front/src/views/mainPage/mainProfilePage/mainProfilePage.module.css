@@ -1,0 +1,66 @@
+.mainContent {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 40% 1fr;
+	grid-template-rows: 100%;
+	height: 95vh;
+}
+
+.mainContent__contactInfo {
+	display: flex;
+	flex-direction: row;
+	padding-top: 5%;
+}
+
+.coctactInfo {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.infoUser {
+	display: flex;
+	flex-direction: column;
+}
+
+.wrapper__choiceActivity {
+	width: 100%;
+	display: flex;
+}
+
+.noClick {
+	pointer-events: none;
+}
+
+.invisibleBlock {
+	display: none;
+}
+
+.wrapper__buttonEdit {
+	width: 40%;
+	margin-top: 10%;
+}
+
+.contact__form {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	padding-left: 10%;
+	padding-right: 15%;
+}
+
+.buttons__afterEdit {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	justify-content: space-between;
+	margin-top: 10%;
+}
+
+.button__close {
+	width: 40%;
+}
+
+.button__save {
+	width: 40%;
+}

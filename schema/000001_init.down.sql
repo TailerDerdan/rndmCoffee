@@ -4,8 +4,6 @@ DROP TABLE users_hobby_lists;
 
 DROP TABLE users_chat_lists;
 
-DROP TABLE items_lists;
-
 DROP TABLE chat_lists;
 
 DROP TABLE find_users;

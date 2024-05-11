@@ -3,6 +3,7 @@
 	display: flex;
 	flex-direction: column;
 	box-sizing: border-box;
+	overflow: hidden;
 }
 
 .homePage__header {
@@ -53,29 +54,28 @@
 
 .homePage__mainContent {
 	width: 100%;
-	display: flex;
-	flex-direction: row;
+	display: grid;
+	grid-template-columns: 50% 1fr;
+	grid-template-rows: 100%;
+	height: 81vh;
 }
 
 .mainContent__iconMan {
-	width: 50%;
-	height: 81vh;
+	width: 80%;
 	display: flex;
 	align-items: flex-end;
 }
 
 .mainContent__meetings {
-	width: 50%;
-	height: 81vh;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-evenly;
-	background-color: #ff9e00;
+	width: 100%;
+	display: grid;
+	grid-template-columns: 33% 1fr;
+	grid-template-rows: 45%;
 }
 
 .mainContent__form {
 	display: flex;
-	width: 50%;
+	width: 100%;
 	justify-content: center;
 	align-items: center;
 }
@@ -85,6 +85,15 @@
 }
 
 .wrapper__meetCard {
-	width: 20%;
-	border: 1px solid black;
+	width: 70%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-left: 10%;
+}
+
+.mainContent__chat {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 }

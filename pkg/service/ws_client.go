@@ -12,7 +12,7 @@ type Client struct {
 	*chat.Client
 }
 
-func (c *Client) writeChatItem(clientId string) {
+func (c *Client) writeChatItem() {
 	defer func() {
 		c.Conn.Close()
 	}()
@@ -21,9 +21,8 @@ func (c *Client) writeChatItem(clientId string) {
 		if !ok {
 			return
 		}
-
-		message.User_id = clientId
-		fmt.Println(message.User_id, "айдишниккк")
+		fmt.Println(message.User_id, "айдишниккк111")
+		fmt.Println(message.User_id, "айдишниккк222")
 
 		c.Conn.WriteJSON(message)
 

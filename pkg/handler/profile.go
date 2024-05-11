@@ -316,10 +316,25 @@ func (h *Handler) deleteHobby(c *gin.Context) {
 	})
 }
 
-
 func IsAvatarHasAllowedExtension(ext string) bool {
 	if ext == ".jpg" || ext == ".png" || ext == ".jpeg" || ext == ".gif" {
 		return true
 	}
 	return false
+}
+
+func (h *Handler) getProfileId(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	prof_id, err := h.services.Profile.GetProfileId(userId)
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	c.JSON(http.StatusOK, prof_id)
 }

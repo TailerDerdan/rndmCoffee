@@ -41,8 +41,8 @@ func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 			profile.POST("/create_profile", h.createProfile)
 			profile.PUT("/edit_profile/:prof_id", h.editProfile)
 			profile.GET("/get_profile/:prof_id", h.getProfile)
+			profile.GET("/get_profile_id", h.getProfileId)
 			profile.PUT("/upload_avatar", h.uploadAvatar)
-
 			hobby := profile.Group(":prof_id/hobby")
 			{
 				hobby.POST("/create_hobby", h.createHobby)
@@ -60,6 +60,8 @@ func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 			chats.GET("/get_chat/:chat_id", h.getListById)
 			chats.PUT("/update_chat/:chat_id", h.updateList)
 			chats.DELETE("/delete_chat/:chat_id", h.deleteList)
+			chats.GET("/get_info_for_chat/:chat_id", h.getInfoForListById)
+			chats.PUT("/rename_chat/:chat_id", h.renameChat)
 
 			items := chats.Group("/:chat_id/items")
 			{

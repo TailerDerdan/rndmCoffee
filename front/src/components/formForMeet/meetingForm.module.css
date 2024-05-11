@@ -7,6 +7,7 @@
 	padding: 3% 4%;
 	box-sizing: border-box;
 	border-radius: 25px;
+	box-shadow: 25px 25px 30px #B3B3B3;
 }
 
 .meetingForm__notActive {
@@ -22,6 +23,36 @@
 .meetingForm__header {
 	font-size: var(--header-create-meeting-font-size);
 	font-weight: var(--header-create-meeting-font-weight);
+}
+
+.wrapper__peopleMeeting {
+	display: flex;
+	flex-direction: row;
+	width: 55%;
+	justify-content: space-between;
+	margin-top: 2%;
+	margin-bottom: 4%;
+}
+
+.peopleMeeting__header {
+	font-size: var(--additionalText-create-meeting-font-size);
+}
+
+.wrapper__choiceCountPeople {
+	display: flex;
+	flex-direction: row;
+	width: 15%;
+	justify-content: space-around;
+}
+
+.peopleMeeting__input {
+	border-radius: 4px;
+	width: 1rem;
+	height: 1rem;
+}
+
+.peopleMeeting__label {
+	font-size: var(--people-meeting-create-meeting-font-size);
 }
 
 .meetingForm__addParams {

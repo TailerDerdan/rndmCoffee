@@ -5,6 +5,11 @@
 	font-weight: lighter;
 }
 
+html,
+body {
+	overflow: hidden;
+}
+
 :root {
 	--main-font-family: inter, sans-serif;
 	--main-font-weight: 450px;
@@ -15,6 +20,7 @@
 	--register-fontSize: 2.25rem;
 	--inputField-fonstSize-Auth: 1.125rem;
 	--label-fontSize-Auth: 1.125rem;
+	--help-text-auth-font-size: 1rem;
 	--inputField-fonstSize-Prof: 0.938rem;
 	--label-fontSize-Prof: 0.938rem;
 	--error-fontSize: 1.4rem;
@@ -27,6 +33,8 @@
 	--header-create-meeting-font-size: 2.5rem;
 	--header-create-meeting-font-weight: 550px;
 	--additionalText-create-meeting-font-size: 1.125rem;
+	--people-meeting-create-meeting-font-size: 1rem;
 	--header-meet-card-font-size: 1.125rem;
 	--header-meet-card-font-weight: bold;
+	--chat-text-font-size: 1rem;
 }

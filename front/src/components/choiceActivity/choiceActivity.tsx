@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styles from "./choiceActivity.module.css";
 import { Headers, TypeAllActivities, TypeOfActivities } from "../../data/types";
 import {

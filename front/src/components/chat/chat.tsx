@@ -24,6 +24,7 @@ export const Chat = (props: ChatProps) => {
 	const [messages, setMessages] = useState<Array<Message>>([]);
 	const [users, setUsers] = useState<Array<{ username: string }>>([]);
 	const textarea = useRef<HTMLTextAreaElement>(null);
+	const refMes = useRef<HTMLDivElement>(null);
 	const [message, setMessage] = useState("");
 
 	const [token] = useLocalStorage({
@@ -70,11 +71,14 @@ export const Chat = (props: ChatProps) => {
 
 	useEffect(() => {
 		if (textarea.current) {
-			textarea.current.style.height = "0px";
-			const scrollHeight = textarea.current.scrollHeight;
-			textarea.current.style.height = scrollHeight + "px";
+			textarea.current!.style.height = "auto";
+			textarea.current!.style.height = `${
+				textarea.current!.scrollHeight
+			}px`;
 		}
+	}, [message]);
 
+	useEffect(() => {
 		if (conn === undefined || conn === null) {
 			console.log("соединение утратилось(");
 			setActive(false);
@@ -102,7 +106,7 @@ export const Chat = (props: ChatProps) => {
 
 			const saveMessage = async () => {
 				const dataMes = {
-					user_id: String(id_user),
+					user_id: String(m.user_id),
 					username: m.username,
 					description: m.description,
 					chatlist_id: m.chatlist_id,
@@ -127,6 +131,10 @@ export const Chat = (props: ChatProps) => {
 			if (String(id_user) === m.user_id) {
 				console.log("я утуттутутуту");
 				saveMessage();
+			}
+
+			if (refMes.current) {
+				refMes.current.scrollTop = refMes.current.scrollHeight;
 			}
 
 			setMessages([...messages, m]);
@@ -159,32 +167,37 @@ export const Chat = (props: ChatProps) => {
 				if (res.ok) {
 					const chatItems = await res.json();
 					console.log(chatItems, "ssssssssssss");
-					let mess: Array<Message> = [];
-					chatItems.data.forEach(
-						(chatItem: {
-							id: number;
-							chatlist_id: string;
-							username: string;
-							description: string;
-							user_id: number;
-						}) => {
-							const mes: Message = {
-								id: chatItem.id,
-								description: chatItem.description,
-								user_id: String(chatItem.user_id),
-								username: chatItem.username,
-								chatlist_id: chatItem.chatlist_id,
-							};
-							mess.push(mes);
-						},
-					);
-					console.log(mess);
-					setMessages([...messages].concat(mess));
+					const mess: Array<Message> = [];
+					if (chatItems.data) {
+						chatItems.data.forEach(
+							(chatItem: {
+								id: number;
+								chatlist_id: string;
+								username: string;
+								description: string;
+								user_id: number;
+							}) => {
+								const mes: Message = {
+									id: chatItem.id,
+									description: chatItem.description,
+									user_id: String(chatItem.user_id),
+									username: chatItem.username,
+									chatlist_id: chatItem.chatlist_id,
+								};
+								mess.push(mes);
+							},
+						);
+						console.log(mess);
+						setMessages([...messages].concat(mess));
+					}
+				}
+				if (refMes.current) {
+					refMes.current.scrollTop = refMes.current.scrollHeight;
 				}
 			};
 			getMessages();
 		};
-	}, [textarea, messages, conn, users]);
+	}, [messages, conn, users]);
 
 	const sendMessage = () => {
 		if (message === "") return;
@@ -204,8 +217,10 @@ export const Chat = (props: ChatProps) => {
 					<h1 className={styles.chatApp__title}></h1>
 				</div>
 				<div className={styles.chatApp__chatWindow}>
-					<div className={styles.chatApp__messages}>
-						<MessageBody messages={messages} />
+					<div className={styles.chatApp__messages} ref={refMes}>
+						<div className={styles.messages}>
+							<MessageBody messages={messages} />
+						</div>
 					</div>
 					<div className={styles.chatApp__inputField}>
 						<div className={styles.inputField__textarea}>
@@ -216,19 +231,16 @@ export const Chat = (props: ChatProps) => {
 								onChange={(event) => {
 									setMessage(event.target.value);
 								}}
+								className={styles.textarea__block}
 							/>
 						</div>
 						<div className={styles.inputField__send}>
-							<button
-								onClick={() => {
-									sendMessage();
-								}}
+							<Button
+								onClick={sendMessage}
 								id={"sendMessage"}
-								// type={ButtonType.Icon}
-								// icon={<SendMessageIcon />}
-							>
-								ПИШИ!!!
-							</button>
+								type={ButtonType.Icon}
+								icon={<SendMessageIcon />}
+							/>
 						</div>
 					</div>
 				</div>

@@ -8,6 +8,7 @@ import { WelcomePage } from "../profilePage/welcome/welcomePage";
 import { MainPage } from "../mainPage/mainPage";
 import { ActivityPage } from "../profilePage/activity/activityPage";
 import { HomePage } from "../mainPage/homePage/homePage";
+import { MainProfilePage } from "../mainPage/mainProfilePage/mainProfilePage";
 
 export const Main = () => {
 	return (
@@ -27,7 +28,7 @@ export const Main = () => {
 			</Route>
 			<Route path="/main" element={<MainPage />}>
 				<Route path="/main/home" element={<HomePage />} />
-				<Route path="/main/profile" element={<></>} />
+				<Route path="/main/profile" element={<MainProfilePage />} />
 			</Route>
 		</Routes>
 	);

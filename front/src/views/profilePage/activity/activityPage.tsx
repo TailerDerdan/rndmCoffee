@@ -54,8 +54,9 @@ export const ActivityPage = () => {
 						event.preventDefault();
 
 						const data = {
-							description,
+							data: description,
 						};
+						console.log(data);
 
 						const response = await fetch(
 							`http://localhost:8000/api/profile/${profile_id}/hobby/create_hobby`,

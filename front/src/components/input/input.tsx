@@ -5,6 +5,7 @@ import { ErrorIcon } from "../icons/icons";
 export enum LocationInputField {
 	Profile,
 	Authorization,
+	MainProfile,
 }
 
 export enum TypeInputOnProfile {
@@ -26,6 +27,7 @@ type TextFieldProps = InputData & {
 	typeInput: string;
 	location: LocationInputField;
 	typeInputOnProfile: TypeInputOnProfile;
+	edit?: boolean;
 };
 
 export const TextField = (props: TextFieldProps) => {
@@ -40,11 +42,12 @@ export const TextField = (props: TextFieldProps) => {
 		error,
 		location,
 		typeInputOnProfile,
+		edit,
 	} = props;
 
 	const profileFontSize = {
 		mainLabel: "var(--label-fontSize-Auth)",
-		helpLabel: "var(--label-fontSize-Auth)",
+		helpLabel: "var(--help-text-auth-font-size)",
 		input: "var(--inputField-fonstSize-Auth)",
 		errorLabel: "var(--inputField-fonstSize-Auth)",
 	};
@@ -76,6 +79,13 @@ export const TextField = (props: TextFieldProps) => {
 	}
 
 	let classesInput = styles.input + " " + inputFontSize;
+
+	if (edit === false) {
+		classesInput += " " + styles.no__hover;
+	} else if (edit) {
+		classesInput = styles.input + " " + inputFontSize;
+	}
+
 	if (typeInputOnProfile === TypeInputOnProfile.Single) {
 		classesInput = classesInput + " " + styles.inputSingle__padding;
 	}
@@ -113,8 +123,10 @@ export const TextField = (props: TextFieldProps) => {
 			});
 		}
 	} else {
-		additionalText = "Необезательно";
-		claassesAdditionalLabel = styles.wrapper__additionalText;
+		if (location !== LocationInputField.MainProfile) {
+			additionalText = "Необезательно";
+			claassesAdditionalLabel = styles.wrapper__additionalText;
+		}
 	}
 
 	let errorText = "";
@@ -122,7 +134,11 @@ export const TextField = (props: TextFieldProps) => {
 		errorText = "Неверный email!";
 	} else if (typeInput == "password") {
 		errorText = "Неверный пароль!";
-	} else if (typeInput == "text") {
+	} else if (
+		typeInput == "text" ||
+		typeInput == "time" ||
+		typeInput == "date"
+	) {
 		errorText = "Пустое поле!";
 	}
 

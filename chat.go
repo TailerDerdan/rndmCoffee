@@ -42,16 +42,11 @@ type UsersList struct {
 }
 
 type FindUserInput struct {
+	Count     int    `json:"count" db:"count"`
 	StartDay  string `json:"startday" db:"startday"`
 	EndDay    string `json:"endday" db:"endday"`
 	StartTime string `json:"starttime" db:"starttime"`
 	EndTime   string `json:"endtime" db:"endtime"`
-}
-
-type ItemLists struct {
-	Id         int
-	ChatListId int
-	ChatItemId int
 }
 
 type UpdateListInput struct {
@@ -67,14 +62,26 @@ func (i UpdateListInput) Validate() error {
 }
 
 type UpdateItemInput struct {
-	Title       *string `json:"title"`
 	Description *string `json:"description"`
 }
 
 func (i UpdateItemInput) Validate() error {
-	if i.Title == nil && i.Description == nil {
+	if i.Description == nil {
 		return errors.New("update structure has no values")
 	}
 
 	return nil
+}
+
+type UsersForChat struct {
+	UsersId []int `json:"users_id"`
+}
+
+type UpdateChat struct {
+	ChatName *string `json:"chat_name" db:"chatName"`
+}
+
+type UsersInfo struct {
+	Id     int `json:"id" db:"id"`
+	UserId int `json:"user_id" db:"user_id"`
 }

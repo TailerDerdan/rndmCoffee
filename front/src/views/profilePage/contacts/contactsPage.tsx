@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "./contactsPage.module.css";
 import { Button, ButtonType } from "../../../components/button/button";
-import { ProfileIcon } from "../../../components/icons/icons";
 import {
 	LocationInputField,
 	TextField,
@@ -17,13 +16,12 @@ import {
 export const UserContacts = () => {
 	const [nameUser, setNameUser] = useState("");
 	const [nameUserError, setNameUserError] = useState(false);
+
 	const [surnameUser, setSurNameUser] = useState("");
 	const [surnameUserError, setSurnameUserError] = useState(false);
-	const [emailUser, setEmailUser] = useState("");
-	const [emailUserError, setEmailUserError] = useState(false);
+
 	const [cityUser, setCityUser] = useState("");
-	const [telegramLinkUser, setTelegramLinkUser] = useState("");
-	const [telegramLinkUserError, setTelegramLinkUserError] = useState(false);
+
 	const [birthdayUser, setBirthdayUser] = useState("");
 
 	const [token] = useLocalStorage({
@@ -70,11 +68,9 @@ export const UserContacts = () => {
 							city: cityUser,
 							findstatus: true,
 							name: nameUser,
-							photo: "1",
+							photo: "none",
 							surname: surnameUser,
-							telegram: telegramLinkUser,
 							birthday: birthdayUser,
-							country: "string",
 							id: id_user,
 						};
 
@@ -88,10 +84,6 @@ export const UserContacts = () => {
 						}
 						if (data.surname.length == 0) {
 							setSurnameUserError(true);
-							return;
-						}
-						if (data.telegram.length == 0) {
-							setTelegramLinkUserError(true);
 							return;
 						}
 
@@ -165,53 +157,17 @@ export const UserContacts = () => {
 						<div className={styles.wrapper__inputs}>
 							{
 								<TextField
-									id={"email"}
-									textLabel={"Email"}
-									typeInput={"email"}
-									inputData={emailUser}
-									setInput={setEmailUser}
-									setErrorInput={setEmailUserError}
-									error={emailUserError}
+									id={"birthday"}
+									textLabel={"Дата рождения"}
+									typeInput={"date"}
+									inputData={birthdayUser}
+									setInput={setBirthdayUser}
 									location={LocationInputField.Profile}
 									typeInputOnProfile={
 										TypeInputOnProfile.Single
 									}
 								/>
 							}
-						</div>
-						<div className={styles.wrapper__inputs}>
-							<div className={styles.wrapper__input__lfs}>
-								{
-									<TextField
-										id={"tgLink"}
-										textLabel={"Ссылка на телеграм"}
-										typeInput={"url"}
-										inputData={telegramLinkUser}
-										setInput={setTelegramLinkUser}
-										setErrorInput={setTelegramLinkUserError}
-										error={telegramLinkUserError}
-										location={LocationInputField.Profile}
-										typeInputOnProfile={
-											TypeInputOnProfile.Double
-										}
-									/>
-								}
-							</div>
-							<div className={styles.wrapper__input__rfs}>
-								{
-									<TextField
-										id={"birthday"}
-										textLabel={"Дата рождения"}
-										typeInput={"date"}
-										inputData={birthdayUser}
-										setInput={setBirthdayUser}
-										location={LocationInputField.Profile}
-										typeInputOnProfile={
-											TypeInputOnProfile.Double
-										}
-									/>
-								}
-							</div>
 						</div>
 						<div className={styles.wrapper__inputs}>
 							{
