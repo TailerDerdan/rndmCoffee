@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import styles from "./choiceActivity.module.css";
 import { Headers, TypeAllActivities, TypeOfActivities } from "../../data/types";
 import {
+	ArtIconActivities,
 	BackButtonIcon,
 	ComputerGamesActivity,
 	NextButtonIcon,
@@ -27,6 +28,10 @@ function ChoiceHeaderAndIcon(currentTitle: Headers) {
 		case Headers.Games:
 			currentIcon = <ComputerGamesActivity />;
 			headerText = "Компьютерные игры";
+			break;
+		case Headers.Art:
+			currentIcon = <ArtIconActivities />;
+			headerText = "Активный образ жизни";
 			break;
 	}
 	return { currentIcon, headerText };

@@ -1,6 +1,9 @@
 export enum Headers {
 	Trends,
 	Games,
+	Art,
+	// Science,
+	// ActiveLifestyle,
 }
 
 export type TypeOfActivities = {

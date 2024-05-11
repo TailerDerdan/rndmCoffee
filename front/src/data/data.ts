@@ -28,6 +28,38 @@ export const Games: GroupActivity = {
 	],
 };
 
+export const Art: GroupActivity = {
+	header: Headers.Art,
+	activities: [
+		{ description: "Фотография" },
+		{ description: "Видеосъемка" },
+		{ description: "Дизайн" },
+		{ description: "Макияж" },
+		{ description: "Рукоделие" },
+		{ description: "Танцы" },
+		{ description: "Пения" },
+		{ description: "Музыка" },
+		{ description: "Ведение блога" },
+		{ description: "Рисование" },
+	],
+};
+
+// export const ActiveLifeStyle: GroupActivity = {
+// 	header: Headers.ActiveLifestyle,
+// 	activities: [
+// 		{ description: "Космос" },
+// 		{ description: "Природа" },
+// 		{ description: "Новости про науку" },
+// 		{ description: "Крутые гайды" },
+// 		{ description: "История" },
+// 		{ description: "География" },
+// 		{ description: "Философия" },
+// 		{ description: "Математика" },
+// 		{ description: "Computer Science" },
+// 		{ description: "Экономика" },
+// 	],
+// };
+
 export const AllActivities: TypeAllActivities = {
 	allActivities: [Trends, Games],
 };
